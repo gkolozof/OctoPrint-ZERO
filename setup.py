@@ -60,8 +60,8 @@ additional_setup_parameters = {}
 ########################################################################################################################
 
 import os
-#os.system('python -m pip uninstall --yes OctoPrint-ZERO')
-#os.system('scripts/provision.sh')
+os.system('python -m pip uninstall --yes OctoPrint-ZERO')
+os.system('scripts/provision.sh')
 
 from setuptools import setup
 

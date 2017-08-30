@@ -47,8 +47,7 @@ fi
 
 cd -
 
-sudo chown -R "$USER"  /opt/ZERO/
-sudo chown -R "$USER" "$pk""/octoprint_ZERO/"
+sudo chown -R "$USER" "$pk""/octoprint_ZERO/" /opt/ZERO/
 sudo chmod a+xr /opt/ZERO/*.sh
 sudo chmod a+xrw /opt/ZERO/update
 

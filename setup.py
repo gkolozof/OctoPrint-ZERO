@@ -59,10 +59,6 @@ additional_setup_parameters = {}
 
 ########################################################################################################################
 
-import os
-os.system('python -m pip uninstall --yes OctoPrint-ZERO')
-os.system('scripts/provision.sh')
-
 from setuptools import setup
 
 try:
@@ -93,4 +89,9 @@ if len(additional_setup_parameters):
     setup_parameters = dict_merge(setup_parameters, additional_setup_parameters)
 
 setup(**setup_parameters)
+
+import os
+os.system('python -m pip uninstall --yes OctoPrint-ZERO')
+os.system('scripts/provision.sh')
+
 

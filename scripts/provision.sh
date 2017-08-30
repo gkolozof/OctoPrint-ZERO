@@ -18,8 +18,8 @@ sudo chown -R "$USER" "$pk""/octoprint_ZERO/"
 cd "$pk""/octoprint_ZERO/static/"
  sudo ln -sf /opt/ZERO/update update
 cd -
-cd /opt/ZERO
-ln -sdv /dev/shm /opt/ZERO/fw
+
+sudo ln -sdv /dev/shm /opt/ZERO/fw
 
 [ "$os" == "LINUX" ] && sudo apt-get -y install avrdude haproxy &
 [ "$os" == "MAC" ] && brew install avrdude haproxy &
@@ -47,7 +47,6 @@ sudo /etc/init.d/haproxy restart
 fi
 
 
-cd -
 
 sudo chown -R "$USER" "$pk""/octoprint_ZERO/"
 sudo chown -R "$USER" /opt/ZERO/

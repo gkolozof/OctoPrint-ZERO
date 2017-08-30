@@ -12,7 +12,7 @@ if [ "`echo \"$fw\"|fgrep MK4duo`" == "" ]
 	then exit
 fi
 
-echo "<pre class='ui-pnotify ui-pnotify-shadow' aria-live='assertive'  style='width:800px;height: 400px;overflow: scroll;background-position: center;background-size: 46%,46%;  background-color: #083142; background-image: url(/plugin/ZERO/static/loading.gif);  color:#ffffcf; background-repeat: no-repeat; background-attachment: fixed;background-position: 52% 62%; ' >" > /opt/ZERO/update
+echo "<pre class='ui-pnotify ui-pnotify-shadow' aria-live='assertive'  style='width:800px;height: 400px;overflow: scroll; background-size: 46%,46%;  background-color: #083142; background-image: url(/plugin/ZERO/static/loading.gif);  color:#ffffcf; background-repeat: no-repeat; background-attachment: fixed;background-position: 52% 47%; ' >" > /opt/ZERO/update
 
 com="`ls /dev/ttyACM* /dev/ttyUSB*|head -n 1`"
 echo "Disconnecting 3D PRINTER from port $com, Compiling Arduino MEGA2560 & compatible Wait!!!" >> /opt/ZERO/update

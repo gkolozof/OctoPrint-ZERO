@@ -12,13 +12,12 @@ echo $os
 sudo mkdir /opt/ZERO
 sudo cp scripts/os.sh /opt/ZERO
 sudo cp scripts/act.sh /opt/ZERO
-sudo mkdir "$pk""/octoprint_ZERO/"
-sudo mkdir "$pk""/octoprint_ZERO/static/"
-sudo chown -R "$USER" "$pk""/octoprint_ZERO/"
-cd "$pk""/octoprint_ZERO/static/"
- sudo ln -sf /opt/ZERO/update update
-cd -
 
+#sudo mkdir "$pk""/octoprint_ZERO/"
+#sudo mkdir "$pk""/octoprint_ZERO/static/"
+#sudo chown -R "$USER" "$pk""/octoprint_ZERO/"
+
+sudo ln -sf /opt/ZERO/update "$pk/octoprint_ZERO/static/update"
 sudo ln -sdv /dev/shm /opt/ZERO/fw
 
 [ "$os" == "LINUX" ] && sudo apt-get -y install avrdude haproxy &

@@ -14,8 +14,10 @@ sudo cp scripts/os.sh /opt/ZERO
 sudo cp scripts/act.sh /opt/ZERO
 sudo mkdir "$pk""/octoprint_ZERO/"
 sudo mkdir "$pk""/octoprint_ZERO/static/"
+sudo chown -R "$USER" "$pk""/octoprint_ZERO/"
 cd "$pk""/octoprint_ZERO/static/"
  sudo ln -sf /opt/ZERO/update update
+cd -
 cd /opt/ZERO
 ln -sdv /dev/shm /opt/ZERO/fw
 
@@ -47,7 +49,8 @@ fi
 
 cd -
 
-sudo chown -R "$USER" "$pk""/octoprint_ZERO/" /opt/ZERO/
+sudo chown -R "$USER" "$pk""/octoprint_ZERO/"
+sudo chown -R "$USER" /opt/ZERO/
 sudo chmod a+xr /opt/ZERO/*.sh
 sudo chmod a+xrw /opt/ZERO/update
 

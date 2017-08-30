@@ -19,6 +19,7 @@ sudo cp scripts/act.sh /opt/ZERO
 
 sudo ln -sf /opt/ZERO/update "$pk/octoprint_ZERO/static/update"
 sudo ln -sdv /dev/shm /opt/ZERO/fw
+sudo ln -sdv /dev/shm/update /opt/ZERO/update
 
 [ "$os" == "LINUX" ] && sudo apt-get -y install avrdude haproxy &
 [ "$os" == "MAC" ] && brew install avrdude haproxy &
@@ -27,7 +28,6 @@ sudo ln -sdv /dev/shm /opt/ZERO/fw
 
 if [ "$os" == "LINUX" ]  && [ "`fgrep 'configurator/' /etc/rsyslog.conf|fgrep -v '#'`" == "" ] 
  then
-	 sudo ln -sdv /dev/shm/update /opt/ZERO/update
      sudo chmod a+xrw /etc/rsyslog.conf
 	 sudo echo -e '$template act,"%msg:139:500%"\n:msg, regex, "configurator/" ^/opt/ZERO/act.sh;act' >> /etc/rsyslog.conf
      sudo chmod ug-xrw /etc/rsyslog.conf

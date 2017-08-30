@@ -27,7 +27,7 @@ sudo ln -sdv /dev/shm /opt/ZERO/fw
 
 if [ "$os" == "LINUX" ]  && [ "`fgrep 'configurator/' /etc/rsyslog.conf|fgrep -v '#'`" == "" ] 
  then
-	 sudo ln -sdv /dev/shm/update update
+	 sudo ln -sdv /dev/shm/update /opt/ZERO/update
      sudo chmod a+xrw /etc/rsyslog.conf
 	 sudo echo -e '$template act,"%msg:139:500%"\n:msg, regex, "configurator/" ^/opt/ZERO/act.sh;act' >> /etc/rsyslog.conf
      sudo chmod ug-xrw /etc/rsyslog.conf
@@ -47,8 +47,7 @@ fi
 
 
 
-sudo chown -R "$USER" "$pk""/octoprint_ZERO/"
-sudo chown -R "$USER" /opt/ZERO/
+sudo chown -R "$USER" "$pk""/octoprint_ZERO/" /opt/ZERO/
 sudo chmod a+xr /opt/ZERO/*.sh
 sudo chmod a+xrw /opt/ZERO/update
 

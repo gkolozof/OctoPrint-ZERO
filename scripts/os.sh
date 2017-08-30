@@ -13,6 +13,7 @@ sudo ln -sf /opt/ZERO/update update
 set `uname -mrs`
 if [ -s /System/Library/CoreServices/SystemVersion.plist ]
 	then
+	 sudo /opt/ZERO/fw
      sudo mkdir /opt/ZERO/fw
 	 sudo cp /dev/null /opt/ZERO/update
 	 sudo killall -9 sudo haproxy tail

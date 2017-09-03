@@ -31,9 +31,9 @@ if [ "`fgrep '/marlinkimbra/' /etc/haproxy/haproxy.cfg`" == "" ]
   sudo cp /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.bak
   [ "$os" == "MAC" ] && sudo cp scripts/haproxy.cfg.mac /etc/haproxy/haproxy.cfg 
   [ "$os" == "LINUX" ] && sudo cp scripts/haproxy.cfg.linux /etc/haproxy/haproxy.cfg 
-  (sleep 60;sudo /etc/init.d/haproxy restart) &
 fi
 sudo chown -R "$USER" "$pk/octoprint_ZERO/" /opt/ZERO/
 sudo chmod a+xr /opt/ZERO/*.sh
+## (sleep 60;sudo /etc/init.d/haproxy restart) &
 
 

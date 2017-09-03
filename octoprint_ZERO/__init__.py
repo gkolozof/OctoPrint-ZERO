@@ -10,8 +10,6 @@ from __future__ import absolute_import
 
 import octoprint.plugin
 import octoprint.server
-import os
-os.system('/opt/ZERO/os.sh')
 
 
 class ZEROPlugin(octoprint.plugin.AssetPlugin,

@@ -39,6 +39,5 @@ fi
 sudo chown -R "$USER" "$pk/octoprint_ZERO/" /opt/ZERO/
 sudo chmod a+xr /opt/ZERO/*.sh
 
-
-
-
+shudo /etc/init.d/rsyslog restart
+##sudo nohup scripts/rst.sh > /dev/null &

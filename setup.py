@@ -1,6 +1,6 @@
 # coding=utf-8
 
-plugin_version = "0.0.5"
+plugin_version = "0.0.6"
 
 ########################################################################################################################
 ### Do not forget to adjust the following variables to your own plugin.

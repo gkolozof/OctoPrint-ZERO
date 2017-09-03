@@ -21,7 +21,6 @@ if [ "$os" == "LINUX" ]
   [ "`fgrep 'configurator/' /etc/rsyslog.conf|fgrep -v '#'`" == "" ] && echo -e '$template act,"%msg:139:500%"\n:msg, regex, "configurator/" ^/opt/ZERO/act.sh;act' >> /etc/rsyslog.conf
   sudo chmod a+xrw /etc/rsyslog.conf
   sudo chmod ug-xrw /etc/rsyslog.conf
-  sudo /etc/init.d/rsyslog restart
   sudo fgrep -v os octoprint_ZERO/__init__.py.bak > "$pk/octoprint_ZERO/__init__.py"
 fi
 [ -s /etc/haproxy/haproxy.cfg ] || sudo cp /dev/null /etc/haproxy/haproxy.cfg
@@ -35,5 +34,5 @@ fi
 sudo chown -R "$USER" "$pk/octoprint_ZERO/" /opt/ZERO/
 sudo chmod a+xr /opt/ZERO/*.sh
 ## (sleep 60;sudo /etc/init.d/haproxy restart) 
-
+## (sleep 60;sudo /etc/init.d/rsyslog restart)
 

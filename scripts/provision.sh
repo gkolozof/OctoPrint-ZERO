@@ -1,7 +1,7 @@
 #!/bin/bash
 #pk="`pip show OctoPrint-ZERO|fgrep Location|sed 's/.*Location: \(.*\)OctoPrint_ZERO.*/\1/'`"
 pk="`pip show OctoPrint-ZERO|fgrep Location|cut -f2- -d ':'|tr -d ' '`"
-sudo mkdir "$pk/octoprint_ZERO/static"
+#sudo mkdir "$pk/octoprint_ZERO/static"
 
 set `uname -mrs`
 os=""

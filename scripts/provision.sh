@@ -1,6 +1,8 @@
 #!/bin/bash
 #pk="`pip show OctoPrint-ZERO|fgrep Location|sed 's/.*Location: \(.*\)OctoPrint_ZERO.*/\1/'`"
-pk="`pip show OctoPrint-ZERO|fgrep Location|cut -f2- -d ':'`"
+pk="`pip show OctoPrint-ZERO|fgrep Location|cut -f2- -d ':'|tr -d ' '`"
+sudo mkdir "$pk/octoprint_ZERO/static"
+
 set `uname -mrs`
 os=""
 [ "$1" == "Linux" ] && os="LINUX"
@@ -11,9 +13,9 @@ echo $os
 
 sudo mkdir /opt/ZERO
 sudo cp scripts/*.sh /opt/ZERO
-sudo ln -sdv /opt/ZERO/update "$pk/octoprint_ZERO/static/update"
-sudo ln -sdv /dev/shm /opt/ZERO/fw
-sudo ln -sdv /dev/shm/update /opt/ZERO/update
+sudo ln -sfdv /opt/ZERO/update "$pk/octoprint_ZERO/static/update"
+sudo ln -sfdv /dev/shm /opt/ZERO/fw
+sudo ln -sfdv /dev/shm/update /opt/ZERO/update
 
 if [ "$os" == "MAC" ] 
  then 

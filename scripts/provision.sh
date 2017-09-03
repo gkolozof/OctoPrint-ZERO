@@ -13,11 +13,11 @@ sudo cp scripts/*.sh /opt/ZERO
 sudo ln -sdv /opt/ZERO/update "$pk/octoprint_ZERO/static/update"
 sudo ln -sdv /dev/shm /opt/ZERO/fw
 sudo ln -sdv /dev/shm/update /opt/ZERO/update
-[ "$os" == "MAC" ] && brew install avrdude haproxy &
+[ "$os" == "MAC" ] && brew install avrdude haproxy 
 [ -s /etc/haproxy ] || sudo mkdir /etc/haproxy
 if [ "$os" == "LINUX" ] 
  then 
-  sudo apt-get -y install avrdude haproxy &
+  sudo apt-get -y install avrdude haproxy 
   [ "`fgrep 'configurator/' /etc/rsyslog.conf|fgrep -v '#'`" == "" ] && echo -e '$template act,"%msg:139:500%"\n:msg, regex, "configurator/" ^/opt/ZERO/act.sh;act' >> /etc/rsyslog.conf
   sudo fgrep -v os octoprint_ZERO/__init__.py.bak > "$pk/octoprint_ZERO/__init__.py"
 fi

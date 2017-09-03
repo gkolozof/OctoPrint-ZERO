@@ -31,6 +31,4 @@ if [ "`fgrep '/marlinkimbra/' /etc/haproxy/haproxy.cfg`" == "" ]
 fi
 sudo chown -R "$USER" "$pk/octoprint_ZERO/" /opt/ZERO/
 sudo chmod a+xr /opt/ZERO/*.sh
-## (sleep 60;sudo /etc/init.d/haproxy restart) 
-## (sleep 60;sudo /etc/init.d/rsyslog restart)
 

@@ -8,12 +8,12 @@ defaults
         mode    http
         option  httplog
         option  dontlognull
-        retries 3
+        retries 10
         option redispatch
         option http-server-close
         option forwardfor
-        maxconn 2
-        timeout connect 5s
+        maxconn 10
+        timeout connect 10s
         timeout client  15min
         timeout server  15min
 

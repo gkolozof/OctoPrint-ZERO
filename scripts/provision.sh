@@ -1,4 +1,5 @@
 #!/bin/bash
+
 pk="`pip show OctoPrint-ZERO|fgrep Location|cut -f2- -d ':'|tr -d ' '`"
 
 set `uname -mrs`
@@ -35,6 +36,6 @@ if [ "`fgrep '/marlinkimbra/' /etc/haproxy/haproxy.cfg`" == "" ]
 fi
 
 sudo chown -R "$USER" "$pk/octoprint_ZERO/" /opt/ZERO/
-sudo chmod a+xr /opt/ZERO/*.sh
-
-
+reset
+echo "Installation complete !!!!"
+echo "REBOOT THE SYSTEM MANUALLY!!!!"

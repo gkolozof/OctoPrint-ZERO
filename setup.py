@@ -1,4 +1,4 @@
-# encoding=utf-8
+# coding=utf-8
 
 plugin_version = "0.0.4"
 

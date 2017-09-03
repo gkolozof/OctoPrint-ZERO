@@ -1,4 +1,5 @@
 #!/bin/bash
+
 pk="`python -c 'import sys;  print \" \n\".join(sys.path)'|fgrep 'packages '|grep 'local\/lib\/'|tail -n 1|tr -d ' '`"
 set `uname -mrs`
 os=""

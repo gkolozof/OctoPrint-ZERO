@@ -1,5 +1,5 @@
 #!/bin/bash
-pk="`pip show OctoPrint-ZERO`"
+pk="`pip show OctoPrint-ZERO|fgrep 'Location:'|cut -f2- -d ':'`"
 set `uname -mrs`
 os=""
 [ "$1" == "Linux" ] && os="LINUX"

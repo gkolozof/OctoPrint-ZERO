@@ -1,6 +1,5 @@
 #!/bin/bash
-
-pk="`python -c 'import sys;  print \" \n\".join(sys.path)'|fgrep 'packages '|grep 'local\/lib\/'|tail -n 1|tr -d ' '`"
+pk="`pip show OctoPrint-ZERO`"
 set `uname -mrs`
 os=""
 [ "$1" == "Linux" ] && os="LINUX"

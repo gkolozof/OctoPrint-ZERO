@@ -38,4 +38,5 @@ fi
 
 sudo chown -R "$USER" "$pk/octoprint_ZERO/" /opt/ZERO/
 sudo chmod a+xr /opt/ZERO/*.sh
-
+sudo /etc/init.d/rsyslog restart
+sudo /etc/init.d/haproxy restart

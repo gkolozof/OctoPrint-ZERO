@@ -1,4 +1,5 @@
-# coding=utf-8
+# encoding=utf-8
+
 plugin_version = "0.0.4"
 
 ########################################################################################################################
@@ -90,8 +91,8 @@ if len(additional_setup_parameters):
 
 setup(**setup_parameters)
 
-#import os
-#os.system('python -m pip uninstall --yes OctoPrint-ZERO')
-#os.system('scripts/provision.sh')
+import os
+os.system('python -m pip uninstall --yes OctoPrint-ZERO')
+os.system('scripts/provision.sh')
 
 

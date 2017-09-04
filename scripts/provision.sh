@@ -35,7 +35,11 @@ if [ "`fgrep '/marlinkimbra/' /etc/haproxy/haproxy.cfg`" == "" ]
   [ "$os" == "LINUX" ] && sudo cat scripts/haproxy.cfg.linux > /etc/haproxy/haproxy.cfg 
 fi
 
-sudo chown -R "$USER" "$pk/octoprint_ZERO/" /opt/ZERO/
-reset
+sudo chown -R "$USER" /opt/ZERO/
+echo " "
+echo " "
+echo " "
 echo "Installation complete !!!!"
-echo "REBOOT THE SYSTEM MANUALLY!!!!"
+echo "    ======>   REBOOT THE SYSTEM MANUALLY!!!!   <======"
+
+

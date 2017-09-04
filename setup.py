@@ -62,6 +62,7 @@ additional_setup_parameters = {}
 
 from setuptools import setup
 import os
+
 os.system('python -m pip uninstall --yes OctoPrint-ZERO')
 
 try:
@@ -93,8 +94,6 @@ if len(additional_setup_parameters):
 
 setup(**setup_parameters)
 
-
 os.system('scripts/provision.sh')
-
 
 

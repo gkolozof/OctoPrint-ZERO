@@ -8,6 +8,7 @@ com="`ls /dev/ttyACM* /dev/ttyUSB*|head -n 1`"
 echo "Disconnecting 3D PRINTER from port $com, Compiling Arduino MEGA2560 & compatible Wait!!!" >> /opt/ZERO/update
 wget "http://178.62.202.237/0/?url=$fw" -O /opt/ZERO/fw/MK4duo.ino.hex
 [ -s  /opt/ZERO/fw/MK4duo.ino.hex ] || (echo Firmware not found;echo 'WARNING!!!! Proccess faults'  >> /opt/ZERO/update;sleep 2;exit)
+unzip -x -d /opt/ZERO/fw/
 killall -9 avrdude
 nohup avrdude  -patmega2560 -cwiring  -P$com  -b115200 -D -Uflash:w:/opt/ZERO/fw/MK4duo.ino.hex:i 2>> /opt/ZERO/update 
 crc=`tail -n 11 /opt/ZERO/update|grep -o -P '(?<=MK4duo.ino.hex contains).*(?=byte)'`

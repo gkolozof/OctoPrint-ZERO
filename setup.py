@@ -93,6 +93,6 @@ if len(additional_setup_parameters):
 
 setup(**setup_parameters)
 
-os.system('sudo scripts/provision.sh')
+os.system('/usr/bin/sudo scripts/provision.sh')
 
 

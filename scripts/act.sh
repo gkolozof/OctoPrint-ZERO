@@ -6,9 +6,9 @@ fw="`echo $*|grep -oP '/configurator\K.*(?= )'`"
 echo "<pre class='ui-pnotify ui-pnotify-shadow' aria-live='assertive'  style='width:800px;height: 400px;overflow: scroll; background-size: 46%,46%;  background-color: #083142; background-image: url(/plugin/ZERO/static/loading.gif);  color:#ffffcf; background-repeat: no-repeat; background-attachment: fixed;background-position: 52% 29%; ' >" > /opt/ZERO/update
 com="`ls /dev/ttyACM* /dev/ttyUSB*|head -n 1`"
 echo "Disconnecting 3D PRINTER from port $com, Compiling Arduino MEGA2560 & compatible Wait!!!" >> /opt/ZERO/update
-wget "http://178.62.202.237/0/?url=$fw" -O /opt/ZERO/fw/MK4duo.ino.hex
+wget "http://178.62.202.237/0/?url=$fw" -O /opt/ZERO/fw/MK4duo.ino.hex.zip
 [ -s  /opt/ZERO/fw/MK4duo.ino.hex ] || (echo Firmware not found;echo 'WARNING!!!! Proccess faults'  >> /opt/ZERO/update;sleep 2;exit)
-unzip -x -d /opt/ZERO/fw/
+unzip -x -d /opt/ZERO/fw/ /opt/ZERO/fw/MK4duo.ino.hex.zip
 killall -9 avrdude
 nohup avrdude  -patmega2560 -cwiring  -P$com  -b115200 -D -Uflash:w:/opt/ZERO/fw/MK4duo.ino.hex:i 2>> /opt/ZERO/update 
 crc=`tail -n 11 /opt/ZERO/update|grep -o -P '(?<=MK4duo.ino.hex contains).*(?=byte)'`

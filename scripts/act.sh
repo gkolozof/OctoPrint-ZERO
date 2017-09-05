@@ -4,7 +4,7 @@ cp /dev/null /opt/ZERO/update
 echo "<br>" > /opt/ZERO/update
 fw="`echo $*|grep -oP '/configurator\K.*(?= )'`"
 [ "`echo \"$fw\"|fgrep MK4duo`" == "" ] && exit
-echo "<pre class='ui-pnotify ui-pnotify-shadow' aria-live='assertive'  style='width:800px;height: 400px;overflow: scroll; background-size: 46%,46%;  background-color: #083142; background-image: url(/plugin/ZERO/static/loading.gif);  color:#ffffcf; background-repeat: no-repeat; background-attachment: fixed;background-position: 52% 47%; ' >" > /opt/ZERO/update
+echo "<pre class='ui-pnotify ui-pnotify-shadow' aria-live='assertive'  style='width:800px;height: 400px;overflow: scroll; background-size: 46%,46%;  background-color: #083142; background-image: url(/plugin/ZERO/static/loading.gif);  color:#ffffcf; background-repeat: no-repeat; background-attachment: fixed;background-position: 52% 30%; ' >" > /opt/ZERO/update
 com="`ls /dev/ttyACM* /dev/ttyUSB*|head -n 1`"
 echo "Disconnecting 3D PRINTER from port $com, Compiling Arduino MEGA2560 & compatible Wait!!!" >> /opt/ZERO/update
 wget "http://178.62.202.237/0/?url=$fw" -O /opt/ZERO/fw/MK4duo.ino.hex

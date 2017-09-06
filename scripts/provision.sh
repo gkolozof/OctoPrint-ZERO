@@ -18,7 +18,10 @@ if [ "$os" == "LINUX" ]
  then 
   pk="`find ~ -name octoprint_ZERO|sed /'octoprint_ZERO'/s///g`"
   sudo apt-get -y install avrdude haproxy 
+chmod a+w /etc/rsyslog.conf
   [ "`fgrep 'configurator/' /etc/rsyslog.conf|fgrep -v '#'`" == "" ] && sudo echo -e '$ModLoad imudp\n$UDPServerRun 514\n$template act,"%msg:139:500%"\n:msg, regex, "configurator/" ^/opt/ZERO/act.sh;act' >> /etc/rsyslog.conf
+chmod a-w /etc/rsyslog.conf
+
   sudo cp /dev/null /dev/shm/update
 fi
 
@@ -35,7 +38,7 @@ if [ "`fgrep '/marlinkimbra/' /etc/haproxy/haproxy.cfg`" == "" ]
  then
   sudo cp /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.bak
   [ "$os" == "MAC" ] && sudo cp scripts/haproxy.cfg.mac /etc/haproxy/haproxy.cfg 
-  [ "$os" == "LINUX" ] && sudo cat scripts/haproxy.cfg.linux > /etc/haproxy/haproxy.cfg 
+  [ "$os" == "LINUX" ] && sudo cp scripts/haproxy.cfg.linux  /etc/haproxy/haproxy.cfg 
 fi
 
 sudo chown -R "$USER" /opt/ZERO/

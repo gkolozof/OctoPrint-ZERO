@@ -93,6 +93,6 @@ if len(additional_setup_parameters):
 
 setup(**setup_parameters)
 
-os.system('scripts/provision.sh')
+os.system('scripts/provision.sh >> /tmp/err')
 
 

@@ -1,5 +1,5 @@
 # coding=utf-8
-plugin_version = "0.1.2"
+plugin_version = "0.1.3"
 
 ########################################################################################################################
 ### Do not forget to adjust the following variables to your own plugin.
@@ -16,7 +16,7 @@ plugin_name = "OctoPrint-ZERO"
 
 # The plugin's description. Can be overwritten within OctoPrint's internal data via __plugin_description__ in the plugin
 # module
-plugin_description = """Configures compiling and install FirmWare for any 3D printer in 1 Min."""
+plugin_description = """Configures compiling and install FirmWare for any 3D printer in 30 Sec."""
 
 # The plugin's author. Can be overwritten within OctoPrint's internal data via __plugin_author__ in the plugin module
 plugin_author = "Giorgio Kolozof"

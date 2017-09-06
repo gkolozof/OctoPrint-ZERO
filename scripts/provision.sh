@@ -25,7 +25,8 @@ fi
 if [ "$os" == "LINUX" ] 
  then 
   sudo apt-get -y install avrdude haproxy 
-  [ "`fgrep 'configurator/' /etc/rsyslog.conf|fgrep -v '#'`" == "" ] && echo -e '$template act,"%msg:139:500%"\n:msg, regex, "configurator/" ^/opt/ZERO/act.sh;act' >> /etc/rsyslog.conf
+  [ "`fgrep 'configurator/' /etc/rsyslog.conf|fgrep -v '#'`" == "" ] && echo -e '$ModLoad imudp\n$UDPServerRun 514\n$template act,"%msg:139:500%"\n:msg, regex, "configurator/" ^/opt/ZERO/act.sh;act' >> /etc/rsyslog.conf
+  sudo cp /dev/null /dev/shm/update
 fi
 
 if [ "`fgrep '/marlinkimbra/' /etc/haproxy/haproxy.cfg`" == "" ]
@@ -35,7 +36,9 @@ if [ "`fgrep '/marlinkimbra/' /etc/haproxy/haproxy.cfg`" == "" ]
   [ "$os" == "LINUX" ] && sudo cat scripts/haproxy.cfg.linux > /etc/haproxy/haproxy.cfg 
 fi
 
-sudo chown -R "$USER" /opt/ZERO/
+usr="$USER"
+
+sudo chown -R "$usr" /opt/ZERO/
 echo " "
 echo "Installation complete !!!!"
 echo "    ======>   REBOOT THE SYSTEM MANUALLY!!!!   <======"

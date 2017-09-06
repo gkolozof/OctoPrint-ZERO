@@ -16,14 +16,13 @@ fi
 
 if [ "$os" == "LINUX" ] 
  then 
-  pk="`find ~/. -name octoprint_ZERO|sed /'octoprint_ZERO'/s///g`"
-  #pk="`~/oprint/bin/pip show OctoPrint-ZERO|fgrep Location|cut -f2- -d ':'|tr -d ' '`"
+  pk="`find ~ -name octoprint_ZERO|sed /'octoprint_ZERO'/s///g`"
   sudo apt-get -y install avrdude haproxy 
-  [ "`fgrep 'configurator/' /etc/rsyslog.conf|fgrep -v '#'`" == "" ] && echo -e '$ModLoad imudp\n$UDPServerRun 514\n$template act,"%msg:139:500%"\n:msg, regex, "configurator/" ^/opt/ZERO/act.sh;act' >> /etc/rsyslog.conf
+  [ "`fgrep 'configurator/' /etc/rsyslog.conf|fgrep -v '#'`" == "" ] && sudo echo -e '$ModLoad imudp\n$UDPServerRun 514\n$template act,"%msg:139:500%"\n:msg, regex, "configurator/" ^/opt/ZERO/act.sh;act' >> /etc/rsyslog.conf
   sudo cp /dev/null /dev/shm/update
 fi
 
-echo "$os $pk" >> /tmp/pwd
+echo "$os $pk" 
 
 sudo mkdir /opt/ZERO
 sudo cp scripts/*.sh /opt/ZERO

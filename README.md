@@ -19,8 +19,8 @@ Manual restart server for Mac:
  haproxy -f /etc/haproxy/haproxy.cfg  &
  octoprint > /dev/null &
 
-Installation approx. time 5 Min. 
-Firmware Configuration, compilation and installtion approx. time 1 Min.!!!
+Installation approx. time 3 Min. 
+Firmware Configuration, compilation and installtion approx. time 30 Sec.!!!
 
 For HELP: gkolozof@gmail.com
 

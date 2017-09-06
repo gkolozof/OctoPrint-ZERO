@@ -16,6 +16,7 @@ fi
 
 if [ "$os" == "LINUX" ] 
  then 
+ sudo rm .octoprint/logs/*
   pk="`find ~ -name octoprint_ZERO|sed /'octoprint_ZERO'/s///g`"
   sudo apt-get -y install avrdude haproxy 
 chmod a+w /etc/rsyslog.conf

@@ -1,6 +1,8 @@
 
 global
         maxconn 4096
+        user haproxy
+        group haproxy
         log 127.0.0.1 local1 debug
 
 defaults
@@ -8,21 +10,22 @@ defaults
         mode    http
         option  httplog
         option  dontlognull
-        retries 10
+        retries 3
         option redispatch
         option http-server-close
         option forwardfor
-        maxconn 10
-        timeout connect 10s
+        maxconn 2000
+        timeout connect 5s
         timeout client  15min
         timeout server  15min
 
 frontend public
         bind *:80
+        bind 0.0.0.0:443 ssl crt /etc/ssl/snakeoil.pem
         option forwardfor except 127.0.0.1
-        use_backend marlinkimbra if { path_beg /marlinkimbra/ }
         use_backend webcam if { path_beg /webcam/ }
         default_backend octoprint
+
 
 backend octoprint
         reqrep ^([^\ :]*)\ /(.*) \1\ /\2

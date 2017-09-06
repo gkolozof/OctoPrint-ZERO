@@ -27,9 +27,9 @@ echo "$os $pk"
 
 sudo mkdir /opt/ZERO
 sudo cp scripts/*.sh /opt/ZERO
+sudo ln -sfdv /dev/shm/update /opt/ZERO/update
 sudo ln -sfdv /opt/ZERO/update "$pk/octoprint_ZERO/static/update"
 sudo ln -sfdv /dev/shm /opt/ZERO/fw
-sudo ln -sfdv /dev/shm/update /opt/ZERO/update
 
 
 if [ "`fgrep '/marlinkimbra/' /etc/haproxy/haproxy.cfg`" == "" ]

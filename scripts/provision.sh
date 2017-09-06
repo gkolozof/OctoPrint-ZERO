@@ -1,6 +1,6 @@
 #!/bin/bash
 
-pk="`pip show OctoPrint-ZERO|fgrep Location|cut -f2- -d ':'|tr -d ' '`"
+pk="`~/oprint/bin/pip show OctoPrint-ZERO|fgrep Location|cut -f2- -d ':'|tr -d ' '`"
 
 set `uname -mrs`
 os=""

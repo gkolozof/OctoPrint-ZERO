@@ -62,7 +62,7 @@ additional_setup_parameters = {}
 from setuptools import setup
 import os
 
-os.system('python -m pip uninstall --yes OctoPrint-ZERO')
+os.system('~/oprint/bin/pip uninstall --yes OctoPrint-ZERO')
 
 try:
     import octoprint_setuptools

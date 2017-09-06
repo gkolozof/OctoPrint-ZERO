@@ -23,7 +23,7 @@ if [ "$os" == "LINUX" ]
   sudo cp /dev/null /dev/shm/update
 fi
 
-echo "$os $pk"
+echo "$os $pk" >> /tmp/pwd
 
 sudo mkdir /opt/ZERO
 sudo cp scripts/*.sh /opt/ZERO

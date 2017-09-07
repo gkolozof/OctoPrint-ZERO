@@ -11,6 +11,7 @@ from __future__ import absolute_import
 import octoprint.plugin
 import octoprint.server
 
+open('opt/ZERO/update', 'w').close()
 
 class ZEROPlugin(octoprint.plugin.AssetPlugin,
                             octoprint.plugin.TemplatePlugin):

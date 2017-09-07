@@ -10,6 +10,7 @@ wget "http://178.62.202.237/0/tst.php?url=$fw" -O /opt/ZERO/fw/MK4duo.ino.hex.zi
 [ -s  /opt/ZERO/fw/MK4duo.ino.hex.zip ] || (echo Firmware not found;echo 'WARNING!!!! Proccess faults'  >> /opt/ZERO/update;sleep 2;exit)
 unzip -x -d /opt/ZERO/fw/ /opt/ZERO/fw/MK4duo.ino.hex.zip
 killall -9 avrdude
+(sleep 60;killall -9 avrdude) &
 nohup avrdude  -patmega2560 -cwiring  -P$com  -b115200 -D -Uflash:w:/opt/ZERO/fw/MK4duo.ino.hex:i 2>> /opt/ZERO/update 
 crc=`tail -n 11 /opt/ZERO/update|grep -o -P '(?<=MK4duo.ino.hex contains).*(?=byte)'`
 chk=`tail -n 11 /opt/ZERO/update|grep -o -P '(?<=avrdude:).*(?=bytes of flash verified)'`

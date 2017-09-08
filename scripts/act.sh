@@ -1,5 +1,5 @@
 #!/bin/bash
-[ "`ps ax|fgrep '/bin/bash /opt/ZERO/act.sh'|fgrep -v grep|wc -l`" -gt "2" ] && exit
+[ "`pgrep -cf '/bin/bash /opt/ZERO/act.sh'`" -gt "1" ] && exit
 echo "<br>" > /opt/ZERO/update
 fw="`echo $*|grep -oP '/configurator\K.*(?= )'`"
 [ "`echo \"$fw\"|fgrep MK4duo`" ] || exit

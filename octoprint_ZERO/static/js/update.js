@@ -50,7 +50,7 @@ var stop = setInterval(function()
      }
    
 
-    if (xmlhttp.responseText.indexOf("t open device") != -1) 
+    if (xmlhttp.responseText.indexOf("can't open device") != -1) 
      { 
       errhttp.open("GET","/plugin/ZERO/static/error-"+lng+".html",false);
       errhttp.setRequestHeader("Cache-Control", "max-age=0");

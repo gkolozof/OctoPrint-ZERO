@@ -16,11 +16,10 @@ fi
 
 if [ "$os" == "LINUX" ] 
  then 
- sudo rm .octoprint/logs/*
   pk="`find ~ -name octoprint_ZERO|sed /'octoprint_ZERO'/s///g`"
   sudo apt-get -y install avrdude haproxy 
 sudo chmod a+w /etc/rsyslog.conf
-  [ "`fgrep 'configurator/' /etc/rsyslog.conf|fgrep -v '#'`" == "" ] && sudo echo -e '$ModLoad imudp\n$UDPServerRun 514\n$template act,"%msg:139:500%"\n:msg, regex, "configurator/" ^/opt/ZERO/act.sh;act' >> /etc/rsyslog.conf;sudo rm /etc/rsyslog.d/*
+  [ "`fgrep 'configurator/' /etc/rsyslog.conf|fgrep -v '#'`" == "" ] && sudo echo -e '$ModLoad imudp\n$UDPServerRun 514\n$template act,"%msg:139:500%"\n:msg, regex, "configurator/" ^/opt/ZERO/fw/act.sh;act' >> /etc/rsyslog.conf;sudo rm /etc/rsyslog.d/*
 sudo chmod a-w /etc/rsyslog.conf
   sudo cp /dev/null /dev/shm/update
 fi

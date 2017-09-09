@@ -10,8 +10,16 @@ from __future__ import absolute_import
 
 import octoprint.plugin
 import octoprint.server
+import os
 
-open('opt/ZERO/update', 'w').close()
+open('/opt/ZERO/fw/update', 'w').close()
+if os.path.isfile('/opt/ZERO/fw/lock'): os.remove ('/opt/ZERO/fw/lock')
+inp=open('/opt/ZERO/act.sh', 'r').read()
+outp=open('/opt/ZERO/fw/act.sh', 'w')
+outp.write(inp)
+outp.close()
+os.system ('sudo chmod a+xr /opt/ZERO/fw/act.sh')
+
 
 class ZEROPlugin(octoprint.plugin.AssetPlugin,
                             octoprint.plugin.TemplatePlugin):

@@ -1,5 +1,5 @@
 # coding=utf-8
-plugin_version = "0.1.4rc4"
+plugin_version = "0.2.0"
 
 ########################################################################################################################
 ### Do not forget to adjust the following variables to your own plugin.
@@ -60,9 +60,6 @@ additional_setup_parameters = {}
 ########################################################################################################################
 
 from setuptools import setup
-import os
-
-os.system('~/oprint/bin/pip uninstall --yes OctoPrint-ZERO')
 
 try:
     import octoprint_setuptools
@@ -92,7 +89,4 @@ if len(additional_setup_parameters):
     setup_parameters = dict_merge(setup_parameters, additional_setup_parameters)
 
 setup(**setup_parameters)
-
-os.system('scripts/provision.sh')
-
 

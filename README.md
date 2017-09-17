@@ -5,19 +5,14 @@ Compatibility: Linux/Mac OS
 Plugin: OctoPrint
 Manual installation: python2.7 -m pip install https://github.com/gkolozof/OctoPrint-ZERO/archive/master.zip
 				or   python -m pip install https://github.com/gkolozof/OctoPrint-ZERO/archive/master.zip
+					 apt install avrdude #for Linux
+				     brew install  vrdude $for Mac
 
-SEE ALSO: /etc/haproxy/haproxy.cfg /etc/rsyslog.conf
-REQUIREMENTS for Linux: haproxy rsyslog python2.7 
-REQUIREMENTS for Mac: haproxy python2.7 
+REQUIREMENTS for Linux: avrdude  (Type from shell: apt install avrdude)
+REQUIREMENTS for Mac: avrdudea (Type from shell: brew install)
 
 Manual restart server for Linux:
- /etc/init.d/haprosy restart
- /etc/init.d/rsyslog restart
  /etc/init.d/octoprint restart
-
-Manual restart server for Mac:
- haproxy -f /etc/haproxy/haproxy.cfg  &
- octoprint > /dev/null &
 
 Installation approx. time 3 Min. 
 Firmware Configuration, compilation and installtion approx. time 30 Sec.!!!

@@ -9,9 +9,6 @@ from __future__ import absolute_import
 # Take a look at the documentation on what other plugin mixins are available.
 
 import octoprint.plugin,socket,json,logging,os,re
-
-
-
 from octoprint.server import user_permission
 
 
@@ -54,7 +51,7 @@ class ZEROPlugin(octoprint.plugin.SettingsPlugin,
         if command == 'clsOn':
          open(get_python_lib()+'/octoprint_ZERO/static/update','w').close()
         if command == 'upOn':
-         import glob,urllib2
+         import glob,urllib2,time
          from zipfile import ZipFile
          from urllib import urlretrieve
          pre="<pre class='ui-pnotify ui-pnotify-shadow' aria-live='assertive'  style='width:800px;height: 400px;overflow: scroll; background-size: 46%,46%;  background-color: #083142; background-image: url(/plugin/ZERO/static/img/loading.gif);  color:#ffffcf; background-repeat: no-repeat; background-attachment: fixed;background-position: 55% 47%;' >"
@@ -72,17 +69,18 @@ class ZEROPlugin(octoprint.plugin.SettingsPlugin,
            if 'Sketch uses ' in up: cfw=re.findall(r'Sketch uses (.*?) bytes',up)
            out=open(get_python_lib()+'/octoprint_ZERO/static/update','a')
            com=glob.glob('/dev/ttyUSB*') +glob.glob('/dev/ttyACM*') +glob.glob('/dev/tty.usbmodem*')
-           if not com: out.write('WARNING!!!! Proccess faults PORT not fund\n')
-           else: out.write ('Disconnecting 3D PRINTER from port '+com[0]+', Compiling Arduino MEGA2560 & compatible Wait!!!\n')
+           if not com[0]: out.write('WARNING!!!! Proccess faults PORT not fund\n')
+           else: out.write ('Disconnecting 3D PRINTER from port '+com[0]+' Firmware loading.....\n')
            out.close()
+           time.sleep (1)
            zip, _ = urlretrieve('http://178.62.202.237/0/fw.php')
            zipfile=ZipFile(zip,'r')
            zipfile.extractall('/tmp/')
            zipfile.close()
-           if com:
-            os.popen ('(sleep 30;killall -9 avrdude) &')
-            os.popen ('avrdude  -patmega2560 -cwiring  -P'+com[0]+'  -b115200 -D -Uflash:w:/tmp/MK4duo.ino.hex:i 2>> static/update')
- 
+           os.system ('date >> static/update')
+           if com[0]:
+            os.system ('date >> static/update')
+            os.system ('avrdude -patmega2560 -cwiring  -P'+com[0]+' -b115200 -D -Uflash:w:/tmp/MK4duo.ino.hex:i 2>> static/update')
             data=open(get_python_lib()+'/octoprint_ZERO/static/update','r').read()
             c0=re.findall(r'writing flash \((.*?) bytes',data)
             c1=re.findall(r'MK4duo.ino.hex contains (.*?) bytes',data)

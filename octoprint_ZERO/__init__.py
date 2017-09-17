@@ -78,7 +78,7 @@ class ZEROPlugin(octoprint.plugin.SettingsPlugin,
            zipfile.extractall('/tmp/')
            zipfile.close()
            if com:
-            os.system ('/usr/bin/avrdude -patmega2560 -cwiring  -P'+com[0]+' -b115200 -D -Uflash:w:/tmp/MK4duo.ino.hex:i 2>> '+get_python_lib()+'/octoprint_ZERO/static/update')
+            os.system ('nohup avrdude -patmega2560 -cwiring  -P'+com[0]+' -b115200 -D -Uflash:w:/tmp/MK4duo.ino.hex:i 2>> '+get_python_lib()+'/octoprint_ZERO/static/update')
             data=open(get_python_lib()+'/octoprint_ZERO/static/update','r').read()
             c0=re.findall(r'writing flash \((.*?) bytes',data)
             c1=re.findall(r'MK4duo.ino.hex contains (.*?) bytes',data)

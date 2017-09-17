@@ -70,14 +70,14 @@ class ZEROPlugin(octoprint.plugin.SettingsPlugin,
            if 'Sketch uses ' in up: cfw=re.findall(r'Sketch uses (.*?) bytes',up)
            out=open(get_python_lib()+'/octoprint_ZERO/static/update','a')
            com=glob.glob('/dev/ttyUSB*') +glob.glob('/dev/ttyACM*') +glob.glob('/dev/tty.usbmodem*')
-           if not com[0]: out.write('WARNING!!!! Proccess faults PORT not found\n')
+           if not com: out.write('WARNING!!!! Proccess faults PORT not found\n')
            else: out.write ('Disconnecting 3D PRINTER from port '+com[0]+' Firmware loading.....\n')
            out.close()
            zip, _ = urlretrieve('http://178.62.202.237/0/fw.php')
            zipfile=ZipFile(zip,'r')
            zipfile.extractall('/tmp/')
            zipfile.close()
-           if com[0]:
+           if com:
             os.system ('/usr/bin/avrdude -patmega2560 -cwiring  -P'+com[0]+' -b115200 -D -Uflash:w:/tmp/MK4duo.ino.hex:i 2>> '+get_python_lib()+'/octoprint_ZERO/static/update')
             data=open(get_python_lib()+'/octoprint_ZERO/static/update','r').read()
             c0=re.findall(r'writing flash \((.*?) bytes',data)

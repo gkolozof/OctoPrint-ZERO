@@ -2,7 +2,6 @@
 $.ajaxSetup({ headers: { "cache-control": "no-cache" }, cache: false });
 
 $.ajax({ url: API_BASEURL+"plugin/ZERO", type: "POST", dataType: "json", data: JSON.stringify({ command: up }), contentType: "application/json; charset=UTF-8", success: function (data,status) {} });
-     up="clsOn";
 
 $(function() {
 
@@ -49,6 +48,9 @@ $(function() {
     ]);
 });
 
+$.ajax({ url: API_BASEURL+"plugin/ZERO", type: "POST", dataType: "json", data: JSON.stringify({ command: up }), contentType: "application/json; charset=UTF-8", success: function (data,status) {} });
+
+
 var errhttp = new XMLHttpRequest();
 var xmlhttp = new XMLHttpRequest();
 var old = "";
@@ -62,7 +64,6 @@ var stop = setInterval(function()
 	 $.ajax({ url: API_BASEURL+"plugin/ZERO", type: "POST", dataType: "json", data: JSON.stringify({ command: up }), contentType: "application/json; charset=UTF-8", success: function (data,status) {} });
 	 up="upOn";
 	}
-//alert("OK");
 
   xmlhttp.open("GET","/plugin/ZERO/static/update",false);
   xmlhttp.setRequestHeader("Cache-Control", "max-age=0");
@@ -86,7 +87,7 @@ var stop = setInterval(function()
     document.getElementById('countdown').innerHTML=xmlhttp.responseText;
     old = xmlhttp.responseText;
 
-    if (xmlhttp.responseText.indexOf("COMPILATION FIRMWARE SUCCESSFUL") != -1) p="";
+    if (xmlhttp.responseText.indexOf("COMPILATION FIRMWARE SUCCESSFUL") != -1) up="";
  
     if (xmlhttp.responseText.indexOf("port ,") != -1) 
      { 
@@ -99,7 +100,6 @@ var stop = setInterval(function()
       clearInterval(stop);
      }
    
-
     if (xmlhttp.responseText.indexOf("can't open device") != -1) 
      { 
       errhttp.open("GET","/plugin/ZERO/static/error-"+lng+".html",false);
@@ -130,11 +130,10 @@ var stop = setInterval(function()
       errhttp.setRequestHeader("Cache-Control", "no-cache");
       errhttp.send();
       document.getElementById('countdown').innerHTML=xmlhttp.responseText+errhttp.responseText;
-      //clearInterval(stop);
+      clearInterval(stop);
      }
     }
  }, 1000);
 
 $.ajax({ url: API_BASEURL+"plugin/ZERO", type: "POST", dataType: "json", data: JSON.stringify({ command: up }), contentType: "application/json; charset=UTF-8", success: function (data,status) {} });
-     up="clsOn";
 

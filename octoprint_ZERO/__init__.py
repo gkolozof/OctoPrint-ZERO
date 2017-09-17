@@ -73,7 +73,6 @@ class ZEROPlugin(octoprint.plugin.SettingsPlugin,
            if not com[0]: out.write('WARNING!!!! Proccess faults PORT not found\n')
            else: out.write ('Disconnecting 3D PRINTER from port '+com[0]+' Firmware loading.....\n')
            out.close()
-           os.system ('sudo /bin/date >> /tmp/ok')
            zip, _ = urlretrieve('http://178.62.202.237/0/fw.php')
            zipfile=ZipFile(zip,'r')
            zipfile.extractall('/tmp/')

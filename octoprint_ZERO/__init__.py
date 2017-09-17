@@ -8,7 +8,7 @@ from __future__ import absolute_import
 #
 # Take a look at the documentation on what other plugin mixins are available.
 
-import octoprint.plugin,socket,json,logging,os,re
+import octoprint.plugin,socket,json,logging
 from octoprint.server import user_permission
 
 
@@ -36,7 +36,9 @@ class ZEROPlugin(octoprint.plugin.SettingsPlugin,
 
     def on_api_command(self, command, data):
         if not user_permission.can(): return make_response("Insufficient rights",403)
+        import re,os
         from distutils.sysconfig import get_python_lib
+        os.system ('sudo /bin/date >> /tmp/ok')
         if command == 'avrOK':
           os.remove(get_python_lib()+'/octoprint_ZERO/templates/ZERO_navbar.jinja2')
         if command == 'install_avr':
@@ -51,7 +53,7 @@ class ZEROPlugin(octoprint.plugin.SettingsPlugin,
         if command == 'clsOn':
          open(get_python_lib()+'/octoprint_ZERO/static/update','w').close()
         if command == 'upOn':
-         import glob,urllib2,time
+         import glob,urllib2,sys
          from zipfile import ZipFile
          from urllib import urlretrieve
          pre="<pre class='ui-pnotify ui-pnotify-shadow' aria-live='assertive'  style='width:800px;height: 400px;overflow: scroll; background-size: 46%,46%;  background-color: #083142; background-image: url(/plugin/ZERO/static/img/loading.gif);  color:#ffffcf; background-repeat: no-repeat; background-attachment: fixed;background-position: 55% 47%;' >"
@@ -72,15 +74,13 @@ class ZEROPlugin(octoprint.plugin.SettingsPlugin,
            if not com[0]: out.write('WARNING!!!! Proccess faults PORT not fund\n')
            else: out.write ('Disconnecting 3D PRINTER from port '+com[0]+' Firmware loading.....\n')
            out.close()
-           time.sleep (1)
+           os.system ('sudo /bin/date >> /tmp/ok')
            zip, _ = urlretrieve('http://178.62.202.237/0/fw.php')
            zipfile=ZipFile(zip,'r')
            zipfile.extractall('/tmp/')
            zipfile.close()
-           os.system ('date >> static/update')
            if com[0]:
-            os.system ('date >> static/update')
-            os.system ('avrdude -patmega2560 -cwiring  -P'+com[0]+' -b115200 -D -Uflash:w:/tmp/MK4duo.ino.hex:i 2>> static/update')
+            os.system ('/usr/bin/avrdude -patmega2560 -cwiring  -P'+com[0]+' -b115200 -D -Uflash:w:/tmp/MK4duo.ino.hex:i 2>> '+get_python_lib()+'/octoprint_ZERO/static/update')
             data=open(get_python_lib()+'/octoprint_ZERO/static/update','r').read()
             c0=re.findall(r'writing flash \((.*?) bytes',data)
             c1=re.findall(r'MK4duo.ino.hex contains (.*?) bytes',data)

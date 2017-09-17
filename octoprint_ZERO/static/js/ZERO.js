@@ -1,5 +1,8 @@
 
-//$.ajaxSetup({ headers: { "cache-control": "no-cache" }, cache: false });
+$.ajaxSetup({ headers: { "cache-control": "no-cache" }, cache: false });
+
+$.ajax({ url: API_BASEURL+"plugin/ZERO", type: "POST", dataType: "json", data: JSON.stringify({ command: up }), contentType: "application/json; charset=UTF-8", success: function (data,status) {} });
+     up="clsOn";
 
 $(function() {
 
@@ -45,7 +48,6 @@ $(function() {
         ["#navbar_plugin_ZERO"]
     ]);
 });
-
 
 var errhttp = new XMLHttpRequest();
 var xmlhttp = new XMLHttpRequest();
@@ -133,8 +135,6 @@ var stop = setInterval(function()
     }
  }, 1000);
 
-
-
-
-
+$.ajax({ url: API_BASEURL+"plugin/ZERO", type: "POST", dataType: "json", data: JSON.stringify({ command: up }), contentType: "application/json; charset=UTF-8", success: function (data,status) {} });
+     up="clsOn";
 

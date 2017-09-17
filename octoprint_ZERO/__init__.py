@@ -38,7 +38,6 @@ class ZEROPlugin(octoprint.plugin.SettingsPlugin,
         if not user_permission.can(): return make_response("Insufficient rights",403)
         import re,os
         from distutils.sysconfig import get_python_lib
-        os.system ('sudo /bin/date >> /tmp/ok')
         if command == 'avrOK':
           os.remove(get_python_lib()+'/octoprint_ZERO/templates/ZERO_navbar.jinja2')
         if command == 'install_avr':
@@ -53,7 +52,7 @@ class ZEROPlugin(octoprint.plugin.SettingsPlugin,
         if command == 'clsOn':
          open(get_python_lib()+'/octoprint_ZERO/static/update','w').close()
         if command == 'upOn':
-         import glob,urllib2,sys
+         import glob,urllib2
          from zipfile import ZipFile
          from urllib import urlretrieve
          pre="<pre class='ui-pnotify ui-pnotify-shadow' aria-live='assertive'  style='width:800px;height: 400px;overflow: scroll; background-size: 46%,46%;  background-color: #083142; background-image: url(/plugin/ZERO/static/img/loading.gif);  color:#ffffcf; background-repeat: no-repeat; background-attachment: fixed;background-position: 55% 47%;' >"
@@ -71,7 +70,7 @@ class ZEROPlugin(octoprint.plugin.SettingsPlugin,
            if 'Sketch uses ' in up: cfw=re.findall(r'Sketch uses (.*?) bytes',up)
            out=open(get_python_lib()+'/octoprint_ZERO/static/update','a')
            com=glob.glob('/dev/ttyUSB*') +glob.glob('/dev/ttyACM*') +glob.glob('/dev/tty.usbmodem*')
-           if not com[0]: out.write('WARNING!!!! Proccess faults PORT not fund\n')
+           if not com[0]: out.write('WARNING!!!! Proccess faults PORT not found\n')
            else: out.write ('Disconnecting 3D PRINTER from port '+com[0]+' Firmware loading.....\n')
            out.close()
            os.system ('sudo /bin/date >> /tmp/ok')

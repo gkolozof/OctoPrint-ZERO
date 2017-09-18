@@ -32,12 +32,24 @@ class ZEROPlugin(octoprint.plugin.SettingsPlugin,
         return [ dict(type="settings", custom_bindings=False) ]
 
     def get_api_commands(self):
-        return dict(clsOn=[],upOn=[],install_avr=[],avrOK=[])
+        return dict(clsOn=[],upOn=[],install_avr=[],avrOK=[],chkOn=[])
 
     def on_api_command(self, command, data):
         if not user_permission.can(): return make_response("Insufficient rights",403)
         import re,os
         from distutils.sysconfig import get_python_lib
+#        if (command == 'chkOn') and (not os.path.exists('/var/lock/avrdude.state.lock')):
+        if (command == 'chkOn') and (not os.path.exists('/var/lock/avrdude.state.lock')):
+         data=open(get_python_lib()+'/octoprint_ZERO/static/update','r').read()
+         cfw=re.findall(r'Sketch uses (.*?) bytes',data)
+         c0=re.findall(r'writing flash \((.*?) bytes',data)
+         c1=re.findall(r'MK4duo.ino.hex contains (.*?) bytes',data)
+         c2=re.findall(r'avrdude: (.*?) bytes of flash written',data)
+         c3=re.findall(r'avrdude: (.*?) bytes of flash verified',data)
+         out=open(get_python_lib()+'/octoprint_ZERO/static/update','a')
+         if (c0==c1) and (c1==c2) and (c2==c3) and (c3==cfw): out.write("Process Successful!!!!")
+         else: out.write('WARNING!!!! Proccess faults')
+         out.close()
         if command == 'avrOK':
           os.remove(get_python_lib()+'/octoprint_ZERO/templates/ZERO_navbar.jinja2')
         if command == 'install_avr':
@@ -52,22 +64,21 @@ class ZEROPlugin(octoprint.plugin.SettingsPlugin,
         if command == 'clsOn':
          open(get_python_lib()+'/octoprint_ZERO/static/update','w').close()
         if command == 'upOn':
-         import glob,urllib2
-         from zipfile import ZipFile
-         from urllib import urlretrieve
-         pre="<pre class='ui-pnotify ui-pnotify-shadow' aria-live='assertive'  style='width:800px;height: 400px;overflow: scroll; background-size: 46%,46%;  background-color: #083142; background-image: url(/plugin/ZERO/static/img/loading.gif);  color:#ffffcf; background-repeat: no-repeat; background-attachment: fixed;background-position: 55% 47%;' >"
+         if not os.path.exists('/var/lock/avrdude.state.lock'):
+          import glob,urllib2
+          from zipfile import ZipFile
+          from urllib import urlretrieve
+          pre="<meta http-equiv='Cache-Control' content='no-cache, no-store, must-revalidate' /><meta http-equiv='Pragma' content='no-cache' /><meta http-equiv='Expires' content='0' /><pre class='ui-pnotify ui-pnotify-shadow' aria-live='assertive'  style='width:800px;height: 400px;overflow: scroll; background-size: 46%,46%;  background-color: #083142; background-image: url(/plugin/ZERO/static/img/loading.gif);  color:#ffffcf; background-repeat: no-repeat; background-attachment: fixed;background-position: 55% 47%;' >"
 
-         up = urllib2.urlopen('http://178.62.202.237/0/up.php').read()
-         if 'PLEASE STANDBY' in up: 
+          up = urllib2.urlopen('http://178.62.202.237/0/up.php').read()
+          if 'PLEASE STANDBY' in up: 
            out=open(get_python_lib()+'/octoprint_ZERO/static/update','w')
            out.write (pre+up+"\n")
            out.close()
-
-         if 'FIRMWARE SUCCESSFUL' in up:
+          if 'FIRMWARE SUCCESSFUL' in up:
            out=open(get_python_lib()+'/octoprint_ZERO/static/update','w')
            out.write (pre+up+"\n")
            out.close()
-           if 'Sketch uses ' in up: cfw=re.findall(r'Sketch uses (.*?) bytes',up)
            out=open(get_python_lib()+'/octoprint_ZERO/static/update','a')
            com=glob.glob('/dev/ttyUSB*') +glob.glob('/dev/ttyACM*') +glob.glob('/dev/tty.usbmodem*')
            if not com: out.write('WARNING!!!! Proccess faults PORT not found\n')
@@ -78,17 +89,11 @@ class ZEROPlugin(octoprint.plugin.SettingsPlugin,
            zipfile.extractall('/tmp/')
            zipfile.close()
            if com:
-            os.system ('nohup avrdude -patmega2560 -cwiring  -P'+com[0]+' -b115200 -D -Uflash:w:/tmp/MK4duo.ino.hex:i 2>> '+get_python_lib()+'/octoprint_ZERO/static/update')
-            data=open(get_python_lib()+'/octoprint_ZERO/static/update','r').read()
-            c0=re.findall(r'writing flash \((.*?) bytes',data)
-            c1=re.findall(r'MK4duo.ino.hex contains (.*?) bytes',data)
-            c2=re.findall(r'avrdude: (.*?) bytes of flash written',data)
-            c3=re.findall(r'avrdude: (.*?) bytes of flash verified',data)
-
             out=open(get_python_lib()+'/octoprint_ZERO/static/update','a')
-            if (c0==c1) and (c1==c2) and (c2==c3) and (c3==cfw): out.write("Process Successful!!!!")
-            else: out.write('WARNING!!!! Proccess faults')
+            out.write("Upload Firmware....")
             out.close()
+            open('/var/lock/avrdude.state.lock','w').close()
+            os.system ('(avrdude -patmega2560 -cwiring  -P'+com[0]+' -b115200 -D -Uflash:w:/tmp/MK4duo.ino.hex:i 2>> '+get_python_lib()+'/octoprint_ZERO/static/update;rm /var/lock/avrdude.state.lock) &')
     
     def get_assets(self): return dict( js=["js/ZERO.js"])
 

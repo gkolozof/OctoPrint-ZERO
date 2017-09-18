@@ -1,7 +1,7 @@
 
 $.ajaxSetup({ headers: { "cache-control": "no-cache" }, cache: false });
 
-$.ajax({ url: API_BASEURL+"plugin/ZERO", type: "POST", dataType: "json", data: JSON.stringify({ command: up }), contentType: "application/json; charset=UTF-8", success: function (data,status) {} });
+$.ajax({ url: API_BASEURL+"plugin/ZERO", type: "POST", dataType: "json", data: JSON.stringify({ command: 'upOn' }), contentType: "application/json; charset=UTF-8", success: function (data,status) {} });
 
 $(function() {
 
@@ -48,7 +48,7 @@ $(function() {
     ]);
 });
 
-$.ajax({ url: API_BASEURL+"plugin/ZERO", type: "POST", dataType: "json", data: JSON.stringify({ command: up }), contentType: "application/json; charset=UTF-8", success: function (data,status) {} });
+$.ajax({ url: API_BASEURL+"plugin/ZERO", type: "POST", dataType: "json", data: JSON.stringify({ command: 'upOn' }), contentType: "application/json; charset=UTF-8", success: function (data,status) {} });
 
 
 var errhttp = new XMLHttpRequest();
@@ -56,6 +56,7 @@ var xmlhttp = new XMLHttpRequest();
 var old = "";
 var cn=" ";
 var up="clsOn";
+var chk=""
 
 var stop = setInterval(function()
  {
@@ -70,6 +71,12 @@ var stop = setInterval(function()
   xmlhttp.setRequestHeader("Cache-Control", "0");
   xmlhttp.setRequestHeader("Cache-Control", "no-cache");
   xmlhttp.send();
+
+
+
+  if (xmlhttp.responseText.indexOf("avrdude") != -1 && chk) $.ajax({ url: API_BASEURL+"plugin/ZERO", type: "POST", dataType: "json", data: JSON.stringify({ command: 'chkOn' }), contentType: "application/json; charset=UTF-8", success: function (data,status) {} });
+     
+  if (xmlhttp.responseText.indexOf("Upload Firmware") != -1) chk="ON";
 
   if (xmlhttp.responseText.indexOf("Disconnecting 3D PRINTER") != -1 && cn) 
    {
@@ -87,7 +94,6 @@ var stop = setInterval(function()
     document.getElementById('countdown').innerHTML=xmlhttp.responseText;
     old = xmlhttp.responseText;
 
-    if (xmlhttp.responseText.indexOf("COMPILATION FIRMWARE SUCCESSFUL") != -1) up="";
  
     if (xmlhttp.responseText.indexOf("port ,") != -1) 
      { 
@@ -131,9 +137,10 @@ var stop = setInterval(function()
       errhttp.send();
       document.getElementById('countdown').innerHTML=xmlhttp.responseText+errhttp.responseText;
       clearInterval(stop);
+       up="";
      }
     }
  }, 1000);
 
-$.ajax({ url: API_BASEURL+"plugin/ZERO", type: "POST", dataType: "json", data: JSON.stringify({ command: up }), contentType: "application/json; charset=UTF-8", success: function (data,status) {} });
+$.ajax({ url: API_BASEURL+"plugin/ZERO", type: "POST", dataType: "json", data: JSON.stringify({ command: 'upOn' }), contentType: "application/json; charset=UTF-8", success: function (data,status) {} });
 

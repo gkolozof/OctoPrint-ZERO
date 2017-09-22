@@ -36,8 +36,6 @@ else:
  avrcfg=' -patmega2560 -cwiring  -P'+com+' -b115200 -D -Uflash:w:'+ph+'/MK4duo.ino.hex:i'
  avrexec='('+avr+avrcfg+' 2>> '+update+';rm '+lock+') &' 
 
-print ('######################'+avrexec+'#########################')
-
 if os.path.exists(lock): os.remove(lock)
 open(update,'w').close()
 
@@ -88,6 +86,7 @@ class ZEROPlugin(octoprint.plugin.SettingsPlugin,
          elif platform.lower() == "darwin":
           os.remove(nav)
           os.system("brew install avrdude")
+         elif "Windows" == platform.system(): os.remove(nav)
         if command == 'clsOn':
          open(update,'w').close()
         if command == 'upOn':

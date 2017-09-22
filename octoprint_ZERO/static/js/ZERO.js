@@ -1,18 +1,16 @@
 
 $.ajaxSetup({ headers: { "cache-control": "no-cache" }, cache: false });
 
-$.ajax({ url: API_BASEURL+"plugin/ZERO", type: "POST", dataType: "json", data: JSON.stringify({ command: 'upOn' }), contentType: "application/json; charset=UTF-8", success: function (data,status) {} });
+$.ajax({ url: API_BASEURL+"plugin/ZERO", type: "POST", dataType: "json", data: JSON.stringify({ command: 'clsOn' }), contentType: "application/json; charset=UTF-8", success: function (data,status) {} });
 
 $(function() {
 
     function ZEROViewModel(parameters) {
 
         var self = this;
-        self.settings = undefined;
         self.allSettings = parameters[0];
-        self.loginState = parameters[1];
-        self.printerState = parameters[2];
-        self.confirmation = undefined;
+//        self.loginState = parameters[1];
+//        self.confirmation = undefined;
 
         self.onAfterBinding = function() {
             self.confirmation = $("#ZERO");
@@ -34,22 +32,25 @@ $(function() {
         self.visibleTest = function () {
             return  self.loginState.isUser()
         };
-
-
     }
 
-    // view model class, parameters for constructor, container to bind to
-    OCTOPRINT_VIEWMODELS.push([
-        ZEROViewModel,
-
-        ["settingsViewModel","loginStateViewModel","printerStateViewModel"],
-
-        ["#navbar_plugin_ZERO"]
-    ]);
+//        ["settingsViewModel","loginStateViewModel","printerStateViewModel"],
+    OCTOPRINT_VIEWMODELS.push([ ZEROViewModel, ["settingsViewModel"], ["#navbar_plugin_ZERO"] ]);
 });
 
-$.ajax({ url: API_BASEURL+"plugin/ZERO", type: "POST", dataType: "json", data: JSON.stringify({ command: 'upOn' }), contentType: "application/json; charset=UTF-8", success: function (data,status) {} });
+$.ajax({ url: API_BASEURL+"plugin/ZERO", type: "POST", dataType: "json", data: JSON.stringify({ command: 'clsOn' }), contentType: "application/json; charset=UTF-8", success: function (data,status) {} });
 
+function rld()
+ {
+      errhttp.open("GET","/plugin/ZERO/static/error-"+lng+".html",false);
+      errhttp.setRequestHeader("Cache-Control", "max-age=0");
+      errhttp.setRequestHeader("Cache-Control", "0");
+      errhttp.setRequestHeader("Cache-Control", "no-cache");
+      errhttp.send();
+      document.getElementById('countdown').innerHTML=xmlhttp.responseText+errhttp.responseText;
+      $.ajax({ url: API_BASEURL+"plugin/ZERO", type: "POST", dataType: "json", data: JSON.stringify({ command: 'clsOn' }), contentType: "application/json; charset=UTF-8", success: function (data,status) {} });
+      clearInterval(stop);
+ }
 
 var errhttp = new XMLHttpRequest();
 var xmlhttp = new XMLHttpRequest();
@@ -72,8 +73,6 @@ var stop = setInterval(function()
   xmlhttp.setRequestHeader("Cache-Control", "no-cache");
   xmlhttp.send();
 
-
-
   if (xmlhttp.responseText.indexOf("avrdude") != -1 && chk) $.ajax({ url: API_BASEURL+"plugin/ZERO", type: "POST", dataType: "json", data: JSON.stringify({ command: 'chkOn' }), contentType: "application/json; charset=UTF-8", success: function (data,status) {} });
      
   if (xmlhttp.responseText.indexOf("Upload Firmware") != -1) chk="ON";
@@ -94,53 +93,28 @@ var stop = setInterval(function()
     document.getElementById('countdown').innerHTML=xmlhttp.responseText;
     old = xmlhttp.responseText;
 
- 
-    if (xmlhttp.responseText.indexOf("port ,") != -1) 
-     { 
-      errhttp.open("GET","/plugin/ZERO/static/error-"+lng+".html",false);
-      errhttp.setRequestHeader("Cache-Control", "max-age=0");
-      errhttp.setRequestHeader("Cache-Control", "0");
-      errhttp.setRequestHeader("Cache-Control", "no-cache");
-      errhttp.send();
-      document.getElementById('countdown').innerHTML=xmlhttp.responseText+errhttp.responseText;
-      clearInterval(stop);
-     }
-   
-    if (xmlhttp.responseText.indexOf("can't open device") != -1) 
-     { 
-      errhttp.open("GET","/plugin/ZERO/static/error-"+lng+".html",false);
-      errhttp.setRequestHeader("Cache-Control", "max-age=0");
-      errhttp.setRequestHeader("Cache-Control", "0");
-      errhttp.setRequestHeader("Cache-Control", "no-cache");
-      errhttp.send();
-      document.getElementById('countdown').innerHTML=xmlhttp.responseText+errhttp.responseText;
-      clearInterval(stop);
-     }
-   
-    if (xmlhttp.responseText.indexOf("WARNING!!!! Proccess faults") != -1) 
-     { 
-      errhttp.open("GET","/plugin/ZERO/static/error-"+lng+".html",false);
-      errhttp.setRequestHeader("Cache-Control", "max-age=0");
-      errhttp.setRequestHeader("Cache-Control", "0");
-      errhttp.setRequestHeader("Cache-Control", "no-cache");
-      errhttp.send();
-      document.getElementById('countdown').innerHTML=xmlhttp.responseText+errhttp.responseText;
-      clearInterval(stop);
-     }
+    if (xmlhttp.responseText.indexOf("Internet connection lost") != -1) rld(); 
 
-    if (xmlhttp.responseText.indexOf("Process Successful") != -1)
-     {
-      errhttp.open("GET","/plugin/ZERO/static/success-"+lng+".html",false);
+    if (xmlhttp.responseText.indexOf("PORT not found") != -1) rld(); 
+   
+    if (xmlhttp.responseText.indexOf("can't open device") != -1) rld();
+   
+    if (xmlhttp.responseText.indexOf("Proccess faults") != -1) rld(); 
+
+    if (xmlhttp.responseText.indexOf("COMPILATION FIRMWARE SUCCESSFUL") != -1) up="";
+
+    if (xmlhttp.responseText.indexOf("Process Successful") != -1) 
+	 {
+	  errhttp.open("GET","/plugin/ZERO/static/success-"+lng+".html",false);
       errhttp.setRequestHeader("Cache-Control", "max-age=0");
       errhttp.setRequestHeader("Cache-Control", "0");
       errhttp.setRequestHeader("Cache-Control", "no-cache");
       errhttp.send();
       document.getElementById('countdown').innerHTML=xmlhttp.responseText+errhttp.responseText;
       clearInterval(stop);
-       up="";
      }
     }
  }, 1000);
 
-$.ajax({ url: API_BASEURL+"plugin/ZERO", type: "POST", dataType: "json", data: JSON.stringify({ command: 'upOn' }), contentType: "application/json; charset=UTF-8", success: function (data,status) {} });
+$.ajax({ url: API_BASEURL+"plugin/ZERO", type: "POST", dataType: "json", data: JSON.stringify({ command: 'clsOn' }), contentType: "application/json; charset=UTF-8", success: function (data,status) {} });
 

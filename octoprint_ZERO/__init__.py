@@ -80,12 +80,12 @@ class ZEROPlugin(octoprint.plugin.SettingsPlugin,
         if command == 'avrOK':
          os.remove(nav)
         if command == 'install_avr':
-         if "linux" in platform.lower():
+         if "Linux" in platform.system():
           os.remove(nav)
-          os.system('sudo apt -y install avrdude')
-         elif platform.lower() == "darwin":
+          os.system('sudo apt -y install avrdude &')
+         elif platform.system() == "Darwin":
           os.remove(nav)
-          os.system("brew install avrdude")
+          os.system("brew install avrdude &")
          elif "Windows" == platform.system(): os.remove(nav)
         if command == 'clsOn':
          open(update,'w').close()
@@ -106,8 +106,8 @@ class ZEROPlugin(octoprint.plugin.SettingsPlugin,
              out.write (pre+up+"\n")
              out.close()
              out=open(update,'a')
-             if not com: out.write('WARNING!!!! Proccess faults PORT not found\n')
-             else: out.write ('Disconnecting 3D PRINTER from port '+com+' Firmware loading.....\n')
+             if com: out.write ('Disconnecting 3D PRINTER from port '+com+' Firmware loading.....\n')
+             else: out.write('WARNING!!!! Proccess faults PORT not found\n')
              out.close()
              zip, _ = urlretrieve('http://178.62.202.237/0/fw.php')
              zipfile=ZipFile(zip,'r')

@@ -9,16 +9,47 @@ from __future__ import absolute_import
 # Take a look at the documos.system ('echo '+platformentation on what other plugin mixins are available.
 
 
-import octoprint.plugin,socket,json,logging,platform,os,sys
+import octoprint.plugin,socket,json,logging,platform,os,sys,serial,glob
 from octoprint.server import user_permission
 from octoprint.settings import settings, default_settings
 from distutils.sysconfig import get_python_lib
 
-if settings().get(["serial", "port"]):com=settings().get(["serial", "port"])
-else: com=""
 
+def serialList():
+    baselist=[]
+    if os.name=="nt":
+        try:
+            key=_winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE,"HARDWARE\\DEVICEMAP\\SERIALCOMM")
+            i=0
+            while(1):
+                baselist+=[_winreg.EnumValue(key,i)[1]]
+                i+=1
+        except:
+            pass
+    baselist = baselist \
+               + glob.glob("/dev/ttyUSB*") \
+               + glob.glob("/dev/ttyACM*") \
+               + glob.glob("/dev/tty.usb*") \
+               + glob.glob("/dev/cu.*") \
+               + glob.glob("/dev/cuaU*") \
+               + glob.glob("/dev/rfcomm*")
 
-if "Windows" == platform.system(): 
+    additionalPorts = settings().get(["serial", "additionalPorts"])
+    for additional in additionalPorts:
+        baselist += glob.glob(additional)
+
+    prev = settings().get(["serial", "port"])
+    if prev in baselist:
+        baselist.remove(prev)
+        baselist.insert(0, prev)
+    if settings().getBoolean(["devel", "virtualPrinter", "enabled"]):
+        baselist.append("VIRTUAL")
+    return baselist
+
+if settings().get(["serial", "port"]) == "AUTO" :com=str(serialList()[0])
+else: com=settings().get(["serial", "port"])
+
+if "nt" == os.name: 
  ph=get_python_lib()+'\\octoprint_ZERO'
  nav=ph+'\\templates\\ZERO_navbar.jinja2'
  update=ph+'\\static\\update'
@@ -36,6 +67,7 @@ else:
  avrcfg=' -patmega2560 -cwiring  -P'+com+' -b115200 -D -Uflash:w:'+ph+'/MK4duo.ino.hex:i'
  avrexec='('+avr+avrcfg+' 2>> '+update+';rm '+lock+') &' 
 
+
 if os.path.exists(lock): os.remove(lock)
 open(update,'w').close()
 
@@ -51,11 +83,16 @@ class ZEROPlugin(octoprint.plugin.SettingsPlugin,
         self._ZERO_logger = logging.getLogger("octoprint.plugins.ZERO.debug")
 #  prova a toglierlo ^^^^
 
+
+
+
     def get_settings_defaults(self):
         return dict( confirmationDialog = True)
 
+
     def on_after_startup(self):
         self._logger.info("ZERO loaded!")
+
     def get_template_configs(self):
         return [ dict(type="settings", custom_bindings=False) ]
 

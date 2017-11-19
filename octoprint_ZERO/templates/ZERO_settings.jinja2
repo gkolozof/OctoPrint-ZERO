@@ -1,11 +1,16 @@
-<script src="/plugin/ZERO/static/js/lng.js"></script>
 <script>
-msg='<object type="text/html" data="/plugin/ZERO/static/int-'+lng+'.html" width=100% height=100% frameborder="0" scrolling="no"></object>';
-MK='<iframe id=iframe src="http://178.62.202.237:5000/marlinkimbra/configurator/v4_3_2/firmware_configurator.php?lingua='+lng+'" frameborder="0" scrolling="yes" allowfullscreen class="modal-header" style="left:0px;top:-2%;width:100%;height:100%;position: fixed; display: block;"></iframe>';
+ lng=navigator.language||navigator.userLanguage;
+ if (lng != 'it') lng='en';
+
+ msg='<object type="text/html" data="/plugin/ZERO/static/int-'+lng+'.html" width=100% height=100% frameborder="0" scrolling="no"></object>';
+
+ MK='<iframe id=iframe src="http://178.62.202.237:5000/marlinkimbra/configurator/v4_3_2/firmware_configurator.php?lingua='+lng+'" frameborder="0" scrolling="yes" allowfullscreen class="modal-header" style="left:0px;top:-2%;width:100%;height:100%;position: fixed; display: block;"></iframe>';
+
+ UP='<iframe id=iframe src="http://178.62.202.237/0/up.html" frameborder="0" scrolling="no" width="100%"  style="left:15%;top:4%;height:17%;position: fixed; display: block;"></iframe>';
 </script>
-<div id=countdown class="ui-pnotify ui-pnotify-shadow" aria-live="assertive" style="margin-top: -5%;left:5%;opacity: 10; display: block; overflow: visible; cursor: auto;"></div>
 
  <script>document.write(MK)</script>
+ <script>document.write(UP)</script>
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
 <meta http-equiv="Pragma" content="no-cache" />
 <meta http-equiv="Expires" content="0" />

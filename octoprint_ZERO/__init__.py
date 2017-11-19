@@ -9,162 +9,20 @@ from __future__ import absolute_import
 # Take a look at the documos.system ('echo '+platformentation on what other plugin mixins are available.
 
 
-import octoprint.plugin,socket,json,logging,platform,os,sys,serial,glob
-from octoprint.server import user_permission
-from octoprint.settings import settings, default_settings
+
+import octoprint.plugin,time,sys,serial,json,requests
+import octoprint.util.comm as comm
+import threading
+
+from zipfile import ZipFile
+from urllib import urlretrieve
+from octoprint.server import user_permission,UI_API_KEY
 from distutils.sysconfig import get_python_lib
+from octoprint.util.avr_isp import intelHex,stk500v2,ispBase
 
+class ZEROPlugin(octoprint.plugin.AssetPlugin, octoprint.plugin.TemplatePlugin):
 
-def serialList():
-    baselist=[]
-    if os.name=="nt":
-        try:
-            key=_winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE,"HARDWARE\\DEVICEMAP\\SERIALCOMM")
-            i=0
-            while(1):
-                baselist+=[_winreg.EnumValue(key,i)[1]]
-                i+=1
-        except:
-            pass
-    baselist = baselist \
-               + glob.glob("/dev/ttyUSB*") \
-               + glob.glob("/dev/ttyACM*") \
-               + glob.glob("/dev/tty.usb*") \
-               + glob.glob("/dev/cu.*") \
-               + glob.glob("/dev/cuaU*") \
-               + glob.glob("/dev/rfcomm*")
-
-    additionalPorts = settings().get(["serial", "additionalPorts"])
-    for additional in additionalPorts:
-        baselist += glob.glob(additional)
-
-    prev = settings().get(["serial", "port"])
-    if prev in baselist:
-        baselist.remove(prev)
-        baselist.insert(0, prev)
-    if settings().getBoolean(["devel", "virtualPrinter", "enabled"]):
-        baselist.append("VIRTUAL")
-    return baselist
-
-if settings().get(["serial", "port"]) == "AUTO" :com=str(serialList()[0])
-else: com=settings().get(["serial", "port"])
-
-if "nt" == os.name: 
- ph=get_python_lib()+'\\octoprint_ZERO'
- nav=ph+'\\templates\\ZERO_navbar.jinja2'
- update=ph+'\\static\\update'
- lock=ph+'\\avrdude.state.lock'
- avr=ph+'\\static\\bin\\avrdude'
- avrcfg=' -patmega2560 -cwiring  -P'+com+' -b115200 -D -Uflash:w:'+ph+'\\MK4duo.ino.hex:i'
- avrexec='start /b  cmd /c "'+avr+avrcfg+' 2>> '+update+' & del '+lock+'"'
-
-else: 
- ph=get_python_lib()+'/octoprint_ZERO'
- nav=ph+'/templates/ZERO_navbar.jinja2'
- update=ph+'/static/update'
- lock=ph+'/avrdude.state.lock'
- avr='avrdude'
- avrcfg=' -patmega2560 -cwiring  -P'+com+' -b115200 -D -Uflash:w:'+ph+'/MK4duo.ino.hex:i'
- avrexec='('+avr+avrcfg+' 2>> '+update+';rm '+lock+') &' 
-
-
-if os.path.exists(lock): os.remove(lock)
-open(update,'w').close()
-
-class ZEROPlugin(octoprint.plugin.SettingsPlugin,
-                            octoprint.plugin.AssetPlugin,
-                            octoprint.plugin.TemplatePlugin,
-                            octoprint.plugin.SimpleApiPlugin,
-                            octoprint.plugin.StartupPlugin):
-
-
-    def __init__(self):
-        self._logger = logging.getLogger("octoprint.plugins.ZERO")
-        self._ZERO_logger = logging.getLogger("octoprint.plugins.ZERO.debug")
-#  prova a toglierlo ^^^^
-
-
-
-
-    def get_settings_defaults(self):
-        return dict( confirmationDialog = True)
-
-
-    def on_after_startup(self):
-        self._logger.info("ZERO loaded!")
-
-    def get_template_configs(self):
-        return [ dict(type="settings", custom_bindings=False) ]
-
-
-    def get_api_commands(self):
-        return dict(clsOn=[],upOn=[],install_avr=[],avrOK=[],chkOn=[])
-
-    def on_api_command(self, command, data):
-        if not user_permission.can(): return make_response("Insufficient rights",403)
-        import re
-        if (command == 'chkOn') and (not os.path.exists(lock)):
-         data=open(update,'r').read()
-         cfw=re.findall(r'Sketch uses (.*?) bytes',data)
-         c0=re.findall(r'writing flash \((.*?) bytes',data)
-         c1=re.findall(r'MK4duo.ino.hex contains (.*?) bytes',data)
-         c2=re.findall(r'avrdude: (.*?) bytes of flash written',data)
-         c3=re.findall(r'avrdude: (.*?) bytes of flash verified',data)
-         out=open(update,'a')
-         if (c0==c1) and (c1==c2) and (c2==c3) and (c3==cfw): out.write("Process Successful!!!!")
-         else: out.write('WARNING!!!! Proccess faults')
-         out.close()
-        if command == 'avrOK':
-         os.remove(nav)
-        if command == 'install_avr':
-         if "Linux" in platform.system():
-          os.remove(nav)
-          os.system('sudo apt -y install avrdude &')
-         elif platform.system() == "Darwin":
-          os.remove(nav)
-          os.system("brew install avrdude &")
-         elif "Windows" == platform.system(): os.remove(nav)
-        if command == 'clsOn':
-         open(update,'w').close()
-        if command == 'upOn':
-         if not os.path.exists(lock):
-          import glob,urllib2
-          from zipfile import ZipFile
-          from urllib import urlretrieve
-          pre="<pre class='ui-pnotify ui-pnotify-shadow' aria-live='assertive'  style='width:800px;height: 400px;overflow: scroll; background-size: 75%,75%;  background-color: #083142; background-image: url(/plugin/ZERO/static/img/loading.gif);  color:#ffffcf; background-repeat: no-repeat; background-attachment: relative;background-position: center;' >"
-          try:
-            up = urllib2.urlopen('http://178.62.202.237/0/up.php',timeout=2).read()
-            if 'PLEASE STANDBY' in up: 
-             out=open(update,'w')
-             out.write (pre+up+"\n")
-             out.close()
-            if 'FIRMWARE SUCCESSFUL' in up:
-             out=open(update,'w')
-             out.write (pre+up+"\n")
-             out.close()
-             out=open(update,'a')
-             if com: out.write ('Disconnecting 3D PRINTER from port '+com+' Firmware loading.....\n')
-             else: out.write('WARNING!!!! Proccess faults PORT not found\n')
-             out.close()
-             zip, _ = urlretrieve('http://178.62.202.237/0/fw.php')
-             zipfile=ZipFile(zip,'r')
-             zipfile.extractall(ph)
-             zipfile.close()
-             if com:
-              out=open(update,'a')
-              out.write("Upload Firmware....")
-              out.close()
-              open(lock,'w').close()
-              os.system (avrexec)
-          except:
-            out=open(get_python_lib()+'/octoprint_ZERO/static/update','w')
-            out.write (pre+"Internet connection lost!!!\n")
-            out.close()
-
-    def get_assets(self): return dict( js=["js/ZERO.js"])
-
-    def get_template_configs(self):
-        return [ dict(type="settings", template="ZERO_settings.jinja2", custom_bindings=True) ]
+    def get_template_configs(self): return [ dict(type="settings", template="ZERO_settings.jinja2", custom_bindings=True) ]
 
     def get_update_information(self):
         return dict(
@@ -172,12 +30,10 @@ class ZEROPlugin(octoprint.plugin.SettingsPlugin,
                 displayName="OctoPrint-ZERO",
                 displayVersion=self._plugin_version,
 
-                # version check: github repository
                 type="github_release",
                 user="gkolozof",
                 repo="OctoPrint-ZERO",
                 current=self._plugin_version,
-                # update method: pip
                 pip="https://github.com/gkolozof/Octoprint-ZERO/archive/{target_version}.zip"
             )
         )
@@ -185,11 +41,101 @@ class ZEROPlugin(octoprint.plugin.SettingsPlugin,
 __plugin_name__ = "ZERO Plugin"
 
 def __plugin_load__():
-    global __plugin_implementation__
+    global __plugin_implementation__, __plugin_hooks__
+
     __plugin_implementation__ = ZEROPlugin()
 
-    global __plugin_hooks__
-    __plugin_hooks__ = {
-        "octoprint.plugin.softwareupdate.check_config": __plugin_implementation__.get_update_information
-    }
+    __plugin_hooks__ = { "octoprint.plugin.softwareupdate.check_config": __plugin_implementation__.get_update_information }
 
+    def vF(self, flashData): pass
+
+    def wF(self, flashData):
+        pageSize = self.chip['pageSize'] * 2
+        flashSize = pageSize * self.chip['pageCount']
+        if flashSize > 0xFFFF:
+            self.sendMessage([0x06, 0x80, 0x00, 0x00, 0x00])
+        else:
+            self.sendMessage([0x06, 0x00, 0x00, 0x00, 0x00])
+
+        loadCount = (len(flashData) + pageSize - 1) // pageSize
+        n=15
+        for i in range(0, loadCount):
+            recv = self.sendMessage([0x13, pageSize >> 8, pageSize & 0xFF, 0xc1, 0x0a, 0x40, 0x4c, 0x20, 0x00, 0x00] + flashData[(i * pageSize):(i * pageSize + pageSize)])
+            percent = float(i) / loadCount
+            dw=str(int(round(percent * 100)))
+            n +=1
+            if n >= 20:
+             n=1 
+             opt('dw.php?dw='+dw)
+#            if self.progressCallback != None: self.progressCallback(i + 1, loadCount*2)
+        opt('dw.php?dw=100')
+
+
+
+    def autoPort(programmer):
+               from octoprint.settings import settings, default_settings
+               port=None
+               if settings().get(["serial", "port"]) == "AUTO":
+                for p in comm.serialList():
+                 try:
+                    programmer.connect(p)
+                    if programmer.leaveISP(): port=p
+                    programmer.close()
+                 except: pass
+               else: port=settings().get(["serial", "port"])
+               return port
+
+    def opt(chk):
+                up=""
+                try:
+                 up = requests.post("http://178.62.202.237/0/"+chk,verify=False).text
+                except: pass
+                return up
+
+
+    def DWunzip():
+                  zip, _ = urlretrieve('http://178.62.202.237/0/fw.php')
+                  ZipFile(zip,'r').extractall(ph)
+                  #fw=ZipFile(zip,'r').read('MK4duo.ino.hex')
+
+
+    def avr(port,prg):
+                 try:
+                   prg.close()
+                   tmp=intelHex.readHex(fw)
+                   prg.connect(port)
+                   #prg.programChip(intelHex.readHex(fw))
+                   prg.programChip(tmp)
+                   prg.close()
+                 except: opt('dw.php?dw=2000')
+
+
+    def bckgrd():
+               stk500v2.Stk500v2.writeFlash=wF
+               stk500v2.Stk500v2.verifyFlash=vF
+               prg = stk500v2.Stk500v2()
+
+               t=1
+               opt('cls.php')
+               while True:
+                time.sleep(t)
+                up=opt('up.php')
+                if ('PLEASE STANDBY' in up): 
+                   requests.post('http://127.0.0.1/api/connection', headers={ 'X-Api-Key': UI_API_KEY },json={'command': 'disconnect'})
+                   port=autoPort(prg)
+                   t=0.4
+
+                if ('local variables' in up):
+                   opt('dw.php?dw=0')
+                   DWunzip()
+                   t=1
+                   avr(port,prg)
+                   opt('cls.php')
+                   time.sleep(3)
+
+    ph=get_python_lib()+'/octoprint_ZERO'
+    fw=ph+'/MK4duo.ino.hex'
+    t = threading.Thread(name="AVR",target=bckgrd)
+    t.daemon = True
+    t.start()
+    

@@ -17,7 +17,7 @@ archive: https://github.com/gkolozof/archive/master.zip
 follow_dependency_links: false
 
 tags:
-- 0.2.2
+- 0.3.0
 
 screenshots:
 - url: /assets/img/plugins/ZERO/OctoPrint-ZERO.png

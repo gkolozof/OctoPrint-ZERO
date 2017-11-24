@@ -108,33 +108,49 @@ def __plugin_load__():
                    prg.close()
                  except: opt('dw.php?dw=2000')
 
-
+## MAIN PRG 
     def bckgrd():
+              ## reconfigure module for auto refresh
                stk500v2.Stk500v2.writeFlash=wF
+              ## disable module for VRY
                stk500v2.Stk500v2.verifyFlash=vF
                prg = stk500v2.Stk500v2()
 
                t=1
+              ## Send command to my server for: new FW, del old FW, create new FW
                opt('cls.php')
                while True:
                 time.sleep(t)
+              ## Check then FW status
                 up=opt('up.php')
                 if ('PLEASE STANDBY' in up) and (t == 1): 
+              ## disable serial port
                    requests.post('http://127.0.0.1/api/connection', headers={ 'X-Api-Key': UI_API_KEY },json={'command': 'disconnect'})
+              ## Detect serial port
                    port=autoPort(prg)
                    t=0.4
-
+              ## Check then FW is complet
                 if ('local variables' in up):
                    opt('dw.php?dw=0')
+              ##  Star FW download and UNZIP 
                    DWunzip()
                    t=1
+              ## Star FW UPDATE in arduino (stk500 port MK4duo.ino.hex)
                    avr(port,prg)
+              ## Clear FW on my server
                    opt('cls.php')
                    time.sleep(3)
 
+## Path python pluin
     ph=get_python_lib()+'/octoprint_ZERO'
+
+## Path  of FW after DW
     fw=ph+'/MK4duo.ino.hex'
+
+## Send function bckgrp in background
     t = threading.Thread(name="AVR",target=bckgrd)
     t.daemon = True
+
+## Enable fn
     t.start()
     

@@ -10,9 +10,8 @@ from __future__ import absolute_import
 
 
 
-import octoprint.plugin,time,sys,serial,json,requests
+import octoprint.plugin,time,sys,serial,json,requests,threading,logging
 import octoprint.util.comm as comm
-import threading
 
 from zipfile import ZipFile
 from urllib import urlretrieve
@@ -75,7 +74,7 @@ def __plugin_load__():
     def autoPort(programmer):
                from octoprint.settings import settings, default_settings
                port=None
-               if settings().get(["serial", "port"]) == "AUTO":
+               if (settings().get(["serial", "port"]) == "AUTO") or (not settings().get(["serial", "port"])):
                 for p in comm.serialList():
                  try:
                     programmer.connect(p)
@@ -120,7 +119,7 @@ def __plugin_load__():
                while True:
                 time.sleep(t)
                 up=opt('up.php')
-                if ('PLEASE STANDBY' in up): 
+                if ('PLEASE STANDBY' in up) and (t == 1): 
                    requests.post('http://127.0.0.1/api/connection', headers={ 'X-Api-Key': UI_API_KEY },json={'command': 'disconnect'})
                    port=autoPort(prg)
                    t=0.4

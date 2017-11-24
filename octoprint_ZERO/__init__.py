@@ -10,7 +10,15 @@ from __future__ import absolute_import
 
 
 
-import octoprint.plugin,time,sys,serial,json,requests,threading,logging
+
+
+#### All step
+# 1) Configure FW from site
+# 2) Download FW for local backup (If you do not want to wait, you can stop the download) 
+# 3) Automatically starting FW UPDATE Arduino
+# 4) Report procedure status
+
+import octoprint.plugin,time,sys,serial,json,requests,threading
 import octoprint.util.comm as comm
 
 from zipfile import ZipFile

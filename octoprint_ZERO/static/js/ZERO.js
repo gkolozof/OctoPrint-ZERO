@@ -8,7 +8,6 @@ MK='<iframe id=iframe src="http://178.62.202.237:5000/marlinkimbra/configurator/
 */
 
 $.ajaxSetup({ headers: {"X-Api-Key": UI_API_KEY} });
-alert("KEY: "+UI_API_KEY);
 var cmd="cls";
 var tmp="";
 var start=false;

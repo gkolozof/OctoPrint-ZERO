@@ -18,7 +18,7 @@ from __future__ import absolute_import
 # 3) Automatically starting FW UPDATE Arduino
 # 4) Report procedure status
 
-import octoprint.plugin,time,sys,serial,json,requests,threading
+import octoprint.plugin,time,sys,serial,json,requests
 import octoprint.util.comm as comm
 
 from zipfile import ZipFile
@@ -26,33 +26,19 @@ from urllib import urlretrieve
 from octoprint.server import user_permission,UI_API_KEY
 from distutils.sysconfig import get_python_lib
 from octoprint.util.avr_isp import intelHex,stk500v2,ispBase
+from flask import request
+    #    requests.post('http://127.0.0.1/api/connection', headers={ 'X-Api-Key': UI_API_KEY },json={'command': 'disconnect'})
 
-class ZEROPlugin(octoprint.plugin.AssetPlugin, octoprint.plugin.TemplatePlugin):
 
-    def get_template_configs(self): return [ dict(type="settings", template="ZERO_settings.jinja2", custom_bindings=True) ]
+class ZEROPlugin(octoprint.plugin.AssetPlugin,octoprint.plugin.BlueprintPlugin,octoprint.plugin.TemplatePlugin):
 
-    def get_update_information(self):
-        return dict(
-            systemcommandeditor=dict(
-                displayName="OctoPrint-ZERO",
-                displayVersion=self._plugin_version,
+  @octoprint.plugin.BlueprintPlugin.route("/fw",methods=["POST","GET"])
+  def fw(self):
 
-                type="github_release",
-                user="gkolozof",
-                repo="OctoPrint-ZERO",
-                current=self._plugin_version,
-                pip="https://github.com/gkolozof/Octoprint-ZERO/archive/{target_version}.zip"
-            )
-        )
-
-__plugin_name__ = "ZERO Plugin"
-
-def __plugin_load__():
-    global __plugin_implementation__, __plugin_hooks__
-
-    __plugin_implementation__ = ZEROPlugin()
-
-    __plugin_hooks__ = { "octoprint.plugin.softwareupdate.check_config": __plugin_implementation__.get_update_information }
+## Path python pluin
+    ph=get_python_lib()+'/octoprint_ZERO'
+## FW Path  after DW
+    fw=ph+'/MK4duo.ino.hex'
 
     def vF(self, flashData): pass
 
@@ -78,7 +64,6 @@ def __plugin_load__():
         opt('dw.php?dw=100')
 
 
-
     def autoPort(programmer):
                from octoprint.settings import settings, default_settings
                port=None
@@ -94,6 +79,7 @@ def __plugin_load__():
 
     def opt(chk):
                 up=""
+                print ("OPT: "+chk)
                 try:
                  up = requests.post("http://178.62.202.237/0/"+chk,verify=False).text
                 except: pass
@@ -117,48 +103,63 @@ def __plugin_load__():
                  except: opt('dw.php?dw=2000')
 
 ## MAIN PRG 
-    def bckgrd():
-              ## reconfigure module for auto refresh
-               stk500v2.Stk500v2.writeFlash=wF
-              ## disable module for VRY
-               stk500v2.Stk500v2.verifyFlash=vF
-               prg = stk500v2.Stk500v2()
-
-               t=1
-              ## Send command to my server for: new FW, del old FW, create new FW
-               opt('cls.php')
-               while True:
-                time.sleep(t)
-              ## Check then FW status
-                up=opt('up.php')
-                if ('PLEASE STANDBY' in up) and (t == 1): 
-              ## disable serial port
-                   requests.post('http://127.0.0.1/api/connection', headers={ 'X-Api-Key': UI_API_KEY },json={'command': 'disconnect'})
-              ## Detect serial port
-                   port=autoPort(prg)
-                   t=0.4
-              ## Check then FW is complet
-                if ('local variables' in up):
-                   opt('dw.php?dw=0')
+    def main(port):
               ##  Star FW download and UNZIP 
-                   DWunzip()
-                   t=1
+                 DWunzip()
               ## Star FW UPDATE in arduino (stk500 port MK4duo.ino.hex)
-                   avr(port,prg)
-              ## Clear FW on my server
-                   opt('cls.php')
-                   time.sleep(3)
+                 print ("PORT: "+port)
+                 avr(port,prg)
 
-## Path python pluin
-    ph=get_python_lib()+'/octoprint_ZERO'
 
-## Path  of FW after DW
-    fw=ph+'/MK4duo.ino.hex'
+## reconfigure module for auto refresh upload satus
+    stk500v2.Stk500v2.writeFlash=wF
+## disable module for VRY
+    stk500v2.Stk500v2.verifyFlash=vF
+    prg = stk500v2.Stk500v2()
 
-## Send function bckgrp in background
-    t = threading.Thread(name="AVR",target=bckgrd)
-    t.daemon = True
+    global prg_port
+    print ("CMD: "+request.args.get('cmd'))
+    if 'prg_port' not in globals() and request.args.get('cmd') == 'ready':  
+        print("READY ON")
+        #opt('dw.php?dw=500')
+        prg_port=autoPort(prg)
+        print("READY OFF")
 
-## Enable fn
-    t.start()
-    
+    if request.args.get('cmd') == 'start' and 'prg_port' in globals():  
+        print("MAIN")
+        print ("PRG_PORT:"+prg_port)
+        main(prg_port)
+        port=None;
+        del globals()['prg_port']
+        print ("DEL GLOB")
+
+    return ""
+
+  def get_template_configs(self): return [ dict(type="settings", template="ZERO_settings.jinja2", custom_bindings=True) ]
+
+  def get_assets(self): return dict( js=["js/ZERO.js"])
+
+  def get_update_information(self):
+        return dict(
+            systemcommandeditor=dict(
+                displayName="OctoPrint-ZERO",
+                displayVersion=self._plugin_version,
+
+                type="github_release",
+                user="gkolozof",
+                repo="OctoPrint-ZERO",
+                current=self._plugin_version,
+                pip="https://github.com/gkolozof/Octoprint-ZERO/archive/{target_version}.zip"
+            )
+        )
+
+
+__plugin_name__ = "ZERO Plugin"
+
+def __plugin_load__():
+    global __plugin_implementation__, __plugin_hooks__,prg
+
+    __plugin_implementation__ = ZEROPlugin()
+
+    __plugin_hooks__ = { "octoprint.plugin.softwareupdate.check_config": __plugin_implementation__.get_update_information }
+

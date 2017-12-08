@@ -27,12 +27,11 @@ from octoprint.server import user_permission,UI_API_KEY
 from distutils.sysconfig import get_python_lib
 from octoprint.util.avr_isp import intelHex,stk500v2,ispBase
 from flask import request
-    #    requests.post('http://127.0.0.1/api/connection', headers={ 'X-Api-Key': UI_API_KEY },json={'command': 'disconnect'})
 
 
 class ZEROPlugin(octoprint.plugin.AssetPlugin,octoprint.plugin.BlueprintPlugin,octoprint.plugin.TemplatePlugin):
 
-  @octoprint.plugin.BlueprintPlugin.route("/fw",methods=["POST","GET"])
+  @octoprint.plugin.BlueprintPlugin.route("/fw")
   def fw(self):
 
 ## Path python pluin
@@ -59,9 +58,9 @@ class ZEROPlugin(octoprint.plugin.AssetPlugin,octoprint.plugin.BlueprintPlugin,o
             n +=1
             if n >= 20:
              n=1 
-             opt('dw.php?dw='+dw)
+             opt(dw)
 #            if self.progressCallback != None: self.progressCallback(i + 1, loadCount*2)
-        opt('dw.php?dw=100')
+        opt('100')
 
 
     def autoPort(programmer):
@@ -79,9 +78,8 @@ class ZEROPlugin(octoprint.plugin.AssetPlugin,octoprint.plugin.BlueprintPlugin,o
 
     def opt(chk):
                 up=""
-                print ("OPT: "+chk)
                 try:
-                 up = requests.post("http://178.62.202.237/0/"+chk,verify=False).text
+                 up = requests.post("http://178.62.202.237/0/dw.php?dw="+chk,verify=False).text
                 except: pass
                 return up
 
@@ -92,46 +90,33 @@ class ZEROPlugin(octoprint.plugin.AssetPlugin,octoprint.plugin.BlueprintPlugin,o
                   #fw=ZipFile(zip,'r').read('MK4duo.ino.hex')
 
 
-    def avr(port,prg):
-                 try:
-                   prg.close()
+    def avr(port,programmer):
+                 try: 
+                   programmer.close()
                    tmp=intelHex.readHex(fw)
-                   prg.connect(port)
-                   #prg.programChip(intelHex.readHex(fw))
-                   prg.programChip(tmp)
-                   prg.close()
-                 except: opt('dw.php?dw=2000')
+                   programmer.connect(port)
+                   #programmer.programChip(intelHex.readHex(fw))
+                   programmer.programChip(tmp)
+                   programmer.close()
+                 except: opt('2000')
 
 ## MAIN PRG 
     def main(port):
               ##  Star FW download and UNZIP 
                  DWunzip()
-              ## Star FW UPDATE in arduino (stk500 port MK4duo.ino.hex)
-                 print ("PORT: "+port)
-                 avr(port,prg)
-
+              ## Star FW UPDATE in to arduino (stk500 port MK4duo.ino.hex)
+                 avr(port,programmer)
 
 ## reconfigure module for auto refresh upload satus
     stk500v2.Stk500v2.writeFlash=wF
 ## disable module for VRY
     stk500v2.Stk500v2.verifyFlash=vF
-    prg = stk500v2.Stk500v2()
+    programmer = stk500v2.Stk500v2()
 
-    global prg_port
-    print ("CMD: "+request.args.get('cmd'))
-    if 'prg_port' not in globals() and request.args.get('cmd') == 'ready':  
-        print("READY ON")
-        #opt('dw.php?dw=500')
-        prg_port=autoPort(prg)
-        print("READY OFF")
-
-    if request.args.get('cmd') == 'start' and 'prg_port' in globals():  
-        print("MAIN")
-        print ("PRG_PORT:"+prg_port)
-        main(prg_port)
-        port=None;
-        del globals()['prg_port']
-        print ("DEL GLOB")
+    port=autoPort(programmer)
+    if not port: port=autoPort(programmer)
+    main(port)
+    port=None;
 
     return ""
 
@@ -157,7 +142,7 @@ class ZEROPlugin(octoprint.plugin.AssetPlugin,octoprint.plugin.BlueprintPlugin,o
 __plugin_name__ = "ZERO Plugin"
 
 def __plugin_load__():
-    global __plugin_implementation__, __plugin_hooks__,prg
+    global __plugin_implementation__, __plugin_hooks__
 
     __plugin_implementation__ = ZEROPlugin()
 

@@ -1,14 +1,16 @@
 
 
+
 $.ajaxSetup({ headers: {"X-Api-Key": UI_API_KEY} });
 var cmd="cls";
 var tmp="";
-var start=false;
 var cn=0;
 //     $.ajax({ url: '/api/connection', crossDomain: true, contentType: 'application/json; charset=UTF-8', method: 'POST', dataType: 'json', data: JSON.stringify({"command": "disconnect" })});
 
 var stop = setInterval(function()
 {
+	//$.ajax({ url: "/plugin/ZERO/fw"})
+
  if (start) $.ajax({ url: "http://178.62.202.237:88/"+cmd }).done(function(up)
   {
    if (up == tmp && cmd == 'up')  up="";
@@ -19,18 +21,10 @@ var stop = setInterval(function()
      }
 
    if (cmd == 'cls' ) {up=""; cmd="up";}
-
    if (up.indexOf("STANDBY") != -1 && cn == 0) 
     {
      cn++;
-     $.post({
-             async: false, 
-             url: '/api/connection',  
-             contentType: 'application/json; charset=UTF-8',  
-             dataType: 'json', 
-             data: JSON.stringify({"command": "disconnect" }), 
-             error: function(){cn=0}
-            });
+     $.post({ async: false, url: '/api/connection',  contentType: 'application/json; charset=UTF-8',  dataType: 'json', data: JSON.stringify({"command": "disconnect" }), error: function(){cn=0} });
     }
 
    if (up.indexOf("local") != -1 && cn == 1) { cn++;$.ajax({ url: "/plugin/ZERO/fw"})}
@@ -54,4 +48,4 @@ var stop = setInterval(function()
     }
   });
 
-}, 400);
+}, 600);

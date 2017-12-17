@@ -14,30 +14,34 @@ from __future__ import absolute_import
 
 #### All step
 # 1) Configure FW from site
-# 2) Download FW for local backup (If you do not want to wait, you can stop the download) 
+# 2) Download FW for local backup (If you do not want to wait, you can cancal the download after 1 or 2 Sec.) 
 # 3) Automatically starting FW UPDATE Arduino
 # 4) Report procedure status
 
-import octoprint.plugin,time,sys,serial,json,requests
-import octoprint.util.comm as comm
+
+
+
+import requests
 
 from zipfile import ZipFile
 from urllib import urlretrieve
-from octoprint.server import user_permission,UI_API_KEY
 from distutils.sysconfig import get_python_lib
 from octoprint.util.avr_isp import intelHex,stk500v2,ispBase
-from flask import request
+from octoprint.plugin import AssetPlugin,BlueprintPlugin,TemplatePlugin
 
+class ZEROPlugin(AssetPlugin,BlueprintPlugin,TemplatePlugin):
 
-class ZEROPlugin(octoprint.plugin.AssetPlugin,octoprint.plugin.BlueprintPlugin,octoprint.plugin.TemplatePlugin):
-
-  @octoprint.plugin.BlueprintPlugin.route("/fw")
+  @BlueprintPlugin.route("/fw")
   def fw(self):
+
+    import octoprint.util.comm as comm
 
 ## Path python pluin
     ph=get_python_lib()+'/octoprint_ZERO'
 ## FW Path  after DW
     fw=ph+'/MK4duo.ino.hex'
+    #print ("OK PORT: "+ comm.MachineCom._detect_port())
+
 
     def vF(self, flashData): pass
 
@@ -57,24 +61,11 @@ class ZEROPlugin(octoprint.plugin.AssetPlugin,octoprint.plugin.BlueprintPlugin,o
             dw=str(int(round(percent * 100)))
             n +=1
             if n >= 20:
-             n=1 
+             n=1
              opt(dw)
 #            if self.progressCallback != None: self.progressCallback(i + 1, loadCount*2)
         opt('100')
 
-
-    def autoPort(programmer):
-               from octoprint.settings import settings, default_settings
-               port=None
-               if (settings().get(["serial", "port"]) == "AUTO") or (not settings().get(["serial", "port"])):
-                for p in comm.serialList():
-                 try:
-                    programmer.connect(p)
-                    if programmer.leaveISP(): port=p
-                    programmer.close()
-                 except: pass
-               else: port=settings().get(["serial", "port"])
-               return port
 
     def opt(chk):
                 up=""
@@ -90,33 +81,40 @@ class ZEROPlugin(octoprint.plugin.AssetPlugin,octoprint.plugin.BlueprintPlugin,o
                   #fw=ZipFile(zip,'r').read('MK4duo.ino.hex')
 
 
+    def autoPort(programmer):
+               from octoprint.settings import settings, default_settings
+               port=None
+               if (settings().get(["serial", "port"]) == "AUTO") or (not settings().get(["serial", "port"])):
+                for p in comm.serialList():
+                 try:
+                    programmer.connect(p)
+                    if programmer.leaveISP(): port=p
+                    programmer.close()
+                 except: pass
+               else: port=settings().get(["serial", "port"])
+               return port
+
+
     def avr(port,programmer):
-                 try: 
-                   programmer.close()
+                 try:
                    tmp=intelHex.readHex(fw)
+                  
+                  #programmer.programChip(intelHex.readHex(fw))
                    programmer.connect(port)
-                   #programmer.programChip(intelHex.readHex(fw))
                    programmer.programChip(tmp)
-                   programmer.close()
                  except: opt('2000')
 
-## MAIN PRG 
-    def main(port):
-              ##  Star FW download and UNZIP 
-                 DWunzip()
-              ## Star FW UPDATE in to arduino (stk500 port MK4duo.ino.hex)
-                 avr(port,programmer)
 
-## reconfigure module for auto refresh upload satus
     stk500v2.Stk500v2.writeFlash=wF
-## disable module for VRY
     stk500v2.Stk500v2.verifyFlash=vF
-    programmer = stk500v2.Stk500v2()
 
+    programmer = stk500v2.Stk500v2()
     port=autoPort(programmer)
-    if not port: port=autoPort(programmer)
-    main(port)
-    port=None;
+    #port=comm.MachineCom()._detect_port() not work correctly!!!!
+##  FW DW and UNZIP
+    DWunzip()
+##  UPLOAD FW (AVR)
+    avr(port,programmer)
 
     return ""
 

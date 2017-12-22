@@ -17,7 +17,11 @@ from __future__ import absolute_import
 # 2) Download FW for local backup (If you do not want to wait, you can cancal the download after 1 or 2 Sec.) 
 # 3) Automatically starting FW UPDATE Arduino
 # 4) Report procedure status
-
+# code:
+# 0-100 % FW UpDate
+# 500 = Serial Port Close
+# 1000 = Serial port failed
+# 2000 = Proccess faults
 
 
 
@@ -40,8 +44,6 @@ class ZEROPlugin(AssetPlugin,BlueprintPlugin,TemplatePlugin):
     ph=get_python_lib()+'/octoprint_ZERO'
 ## FW Path  after DW
     fw=ph+'/MK4duo.ino.hex'
-    #print ("OK PORT: "+ comm.MachineCom._detect_port())
-
 
     def vF(self, flashData): pass
 
@@ -74,7 +76,6 @@ class ZEROPlugin(AssetPlugin,BlueprintPlugin,TemplatePlugin):
                 except: pass
                 return up
 
-
     def DWunzip():
                   zip, _ = urlretrieve('http://178.62.202.237/0/fw.php')
                   ZipFile(zip,'r').extractall(ph)
@@ -96,14 +97,14 @@ class ZEROPlugin(AssetPlugin,BlueprintPlugin,TemplatePlugin):
 
 
     def avr(port,programmer):
-                 try:
+                 if port: 
+                  try:
                    tmp=intelHex.readHex(fw)
-                  
-                  #programmer.programChip(intelHex.readHex(fw))
+                   #programmer.programChip(intelHex.readHex(fw))
                    programmer.connect(port)
                    programmer.programChip(tmp)
-                 except: opt('2000')
-
+                  except: opt('2000')
+                 else: opt('1000')
 
     stk500v2.Stk500v2.writeFlash=wF
     stk500v2.Stk500v2.verifyFlash=vF

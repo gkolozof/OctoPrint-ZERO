@@ -39,7 +39,6 @@ class ZEROPlugin(AssetPlugin,BlueprintPlugin,TemplatePlugin):
   def fw(self):
 
     import octoprint.util.comm as comm
-
 ## Path python pluin
     ph=get_python_lib()+'/octoprint_ZERO'
 ## FW Path  after DW
@@ -98,6 +97,7 @@ class ZEROPlugin(AssetPlugin,BlueprintPlugin,TemplatePlugin):
 
     def avr(port,programmer):
                  if port: 
+                  DWunzip()
                   try:
                    tmp=intelHex.readHex(fw)
                    #programmer.programChip(intelHex.readHex(fw))
@@ -112,9 +112,7 @@ class ZEROPlugin(AssetPlugin,BlueprintPlugin,TemplatePlugin):
     programmer = stk500v2.Stk500v2()
     port=autoPort(programmer)
     #port=comm.MachineCom()._detect_port() not work correctly!!!!
-##  FW DW and UNZIP
-    DWunzip()
-##  UPLOAD FW (AVR)
+##  FW DW for UNZIP and UPLOAD FW (AVR)
     avr(port,programmer)
 
     return ""

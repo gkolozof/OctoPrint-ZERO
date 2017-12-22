@@ -4,14 +4,15 @@ $.ajaxSetup({ headers: {"X-Api-Key": UI_API_KEY} });
 var tmp="";
 var cn=0;
 $.ajax({ url: "http://178.62.202.237/0/cls.php"});
-
-
+var client = new XMLHttpRequest();
 
 var stop = setInterval(function()
 {
- if (start) $.ajax({url: "http://178.62.202.237:88/up" }).done(function(up)
-
+ client.open('GET', "http://178.62.202.237/0/up.php");
+ client.send();
+ if (start) client.onreadystatechange = function() 
   {
+   up=client.responseText; 
    if (up && tmp != up) {$("#countdown").html(up); tmp=up;}
    if (up.indexOf("COMPILATION IN PROGRESS") != -1 && cn == 0) 
     {
@@ -30,7 +31,7 @@ var stop = setInterval(function()
    if (up.indexOf("Proccess faults") != -1)
     {
      $.ajax({ url: "/plugin/ZERO/static/error-"+lng+".html" }).done(function(msg){$("#countdown").html(up+msg)});
-     cn=0;
+     cn=10;
      start=false;
      clearInterval(stop);
     }
@@ -38,10 +39,10 @@ var stop = setInterval(function()
    if (up.indexOf("PROCESS COMPLETED SUCCESSFULL") != -1) 
     {
      $.ajax({ url: "/plugin/ZERO/static/success-"+lng+".html" }).done(function(msg){$("#countdown").html(up+msg)});
-     cn=0;
+     cn=10;
      start=false;
      clearInterval(stop);
     }
-  });
+  }
 
 }, 400);

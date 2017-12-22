@@ -21,11 +21,11 @@ from __future__ import absolute_import
 # 0-100 % FW UpDate
 # 500 = Serial Port Close
 # 1000 = Serial port failed
+# 1500 = FW DW error
 # 2000 = Proccess faults
 
 
-
-import requests
+import requests,os
 
 from zipfile import ZipFile
 from urllib import urlretrieve
@@ -96,14 +96,16 @@ class ZEROPlugin(AssetPlugin,BlueprintPlugin,TemplatePlugin):
 
 
     def avr(port,programmer):
-                 if port: 
+                 if port:
                   DWunzip()
-                  try:
-                   tmp=intelHex.readHex(fw)
-                   #programmer.programChip(intelHex.readHex(fw))
-                   programmer.connect(port)
-                   programmer.programChip(tmp)
-                  except: opt('2000')
+                  if os.path.exists(fw): 
+                   try:
+                    tmp=intelHex.readHex(fw)
+                    #programmer.programChip(intelHex.readHex(fw))
+                    programmer.connect(port)
+                    programmer.programChip(tmp)
+                   except: opt('2000')
+                  else: opt('1500')
                  else: opt('1000')
 
     stk500v2.Stk500v2.writeFlash=wF

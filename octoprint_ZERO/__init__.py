@@ -71,12 +71,12 @@ class ZEROPlugin(AssetPlugin,BlueprintPlugin,TemplatePlugin):
     def opt(chk):
                 up=""
                 try:
-                 up = requests.post("http://178.62.202.237/0/dw.php?dw="+chk,verify=False).text
+                 up = requests.post("http://gkolozof.xyz/0/dw.php?dw="+chk,verify=False).text
                 except: pass
                 return up
 
     def DWunzip():
-                  zip, _ = urlretrieve('http://178.62.202.237/0/fw.php')
+                  zip, _ = urlretrieve('http://gkolozof.xyz/0/fw.php')
                   ZipFile(zip,'r').extractall(ph)
                   #fw=ZipFile(zip,'r').read('MK4duo.ino.hex')
 

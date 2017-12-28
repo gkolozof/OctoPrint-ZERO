@@ -1,4 +1,16 @@
-<pre>
+
+# OctoPrint ZERO
+
+Configures compiling and install FirmWare for any 3D printer in 30 Sec.!!!!
+
+ 1) Configure MarlinKimbra firmware from menu
+ 2) Download firmware for local backup (If you do not want to wait, you can cancal the download after 1 or 2 Sec.)
+ 3) Automatically starting flash the firmware of your printer
+ 4) Report procedure status
+ 
+This plugin can be used configures, compiling and flash the firmware of your printer, very easily and quickly!!!!
+
+##
 
 layout: plugin
 
@@ -17,7 +29,7 @@ archive: https://github.com/gkolozof/archive/master.zip
 follow_dependency_links: false
 
 tags:
-- 0.3.1
+- 0.4.5
 
 screenshots:
 - url: /assets/img/plugins/ZERO/OctoPrint-ZERO.png
@@ -45,12 +57,12 @@ Compatibility: Linux/Mac OS
 Plugin: OctoPrint
 Manual installation: python2.7 -m pip install https://github.com/gkolozof/OctoPrint-ZERO/archive/master.zip
 
-REQUIREMENTS avrdude
 
-Installation approx. time 3 Min.
+Installation approx. time 1 Min.
 Firmware Configuration, compilation and installtion approx. time 30 Sec.!!!
 
 For HELP: gkolozof@gmail.com
 
 Good Work!!!
+
 

@@ -11,6 +11,19 @@ Configures compiling and install FirmWare for any 3D printer in 30 Sec.!!!!
 This plugin can be used configures, compiling and flash the firmware of your printer, very easily and quickly!!!!
 
 ##
+ 3D printer compatibility:
+  - CARTESIAN (Prusa,Mendel,Taz,etc)
+  - DELTA (Rostock/Max,Kossel,Cerberus,etc)
+  - H-Bot/Core
+  - Morgan SCARA
+  - Makerarm SCARA
+  - Wanhao Duplicator
+  - Anycubic Linear Plus
+  - etc
+
+This Plugin interfaces with the MarlinKimbra Configurator Tool Online for more info: https://github.com/MKFirmware/MarlinKimbra
+
+##
 
 layout: plugin
 
@@ -29,7 +42,7 @@ archive: https://github.com/gkolozof/archive/master.zip
 follow_dependency_links: false
 
 tags:
-- 0.4.5
+- 0.4.9
 
 screenshots:
 - url: /assets/img/plugins/ZERO/OctoPrint-ZERO.png
@@ -41,7 +54,7 @@ featuredimage: /assets/img/ZERO.png
 compatibility:
 
   octoprint:
-  - 1.2.4
+  - 1.2.4 or higher
 
   os:
   - Linux
@@ -64,5 +77,6 @@ Firmware Configuration, compilation and installtion approx. time 30 Sec.!!!
 For HELP: gkolozof@gmail.com
 
 Good Work!!!
+
 
 

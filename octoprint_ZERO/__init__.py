@@ -8,10 +8,6 @@ from __future__ import absolute_import
 #
 # Take a look at the documos.system ('echo '+platformentation on what other plugin mixins are available.
 
-#### 
-
-
-
 #### All step
 # 1) Configure FW from site
 # 2) Download FW for local backup (If you do not want to wait, you can cancal the download after 1 or 2 Sec.) 
@@ -138,7 +134,7 @@ class ZEROPlugin(AssetPlugin,BlueprintPlugin,TemplatePlugin):
         )
 
 
-__plugin_name__ = "ZERO Plugin"
+__plugin_name__ = "OctoPrint ZERO"
 
 def __plugin_load__():
     global __plugin_implementation__, __plugin_hooks__

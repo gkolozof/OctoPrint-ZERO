@@ -73,7 +73,7 @@ class ZEROPlugin(AssetPlugin,BlueprintPlugin,TemplatePlugin):
                 return up
 
     def DWunzip():
-                  zip, _ = urlretrieve('http://gkolozof.xyz/0/fw.php')
+                  zip, _ = urlretrieve('https://ssl.gkolozof.xyz/0/fw.php')
                   try: 
                       ZipFile(zip,'r').extractall(ph)
                       return True

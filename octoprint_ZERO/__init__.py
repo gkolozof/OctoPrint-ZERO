@@ -18,6 +18,7 @@ from __future__ import absolute_import
 # 500 = Serial Port Close
 # 1000 = Serial port failed
 # 1500 = FW DW error
+# 1600 = FW error
 # 2000 = Proccess faults
 
 
@@ -73,7 +74,10 @@ class ZEROPlugin(AssetPlugin,BlueprintPlugin,TemplatePlugin):
 
     def DWunzip():
                   zip, _ = urlretrieve('http://gkolozof.xyz/0/fw.php')
-                  ZipFile(zip,'r').extractall(ph)
+                  try: 
+                      ZipFile(zip,'r').extractall(ph)
+                      return True
+                  except: opt('1500')
                   #fw=ZipFile(zip,'r').read('MK4duo.ino.hex')
 
 
@@ -93,15 +97,15 @@ class ZEROPlugin(AssetPlugin,BlueprintPlugin,TemplatePlugin):
 
     def avr(port,programmer):
                  if port:
-                  DWunzip()
-                  if os.path.exists(fw): 
-                   try:
-                    tmp=intelHex.readHex(fw)
-                    #programmer.programChip(intelHex.readHex(fw))
-                    programmer.connect(port)
-                    programmer.programChip(tmp)
-                   except: opt('2000')
-                  else: opt('1500')
+                  if DWunzip():
+                   if os.path.exists(fw): 
+                    try:
+                     tmp=intelHex.readHex(fw)
+                     #programmer.programChip(intelHex.readHex(fw))
+                     programmer.connect(port)
+                     programmer.programChip(tmp)
+                    except: opt('2000')
+                   else: opt('1600')
                  else: opt('1000')
 
     stk500v2.Stk500v2.writeFlash=wF

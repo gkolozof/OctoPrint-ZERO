@@ -1,10 +1,9 @@
-$.ajaxSetup({ headers: {"X-Api-Key": UI_API_KEY} });
 var tmp="";
 var up="";
 var cn=0;
 var client = new XMLHttpRequest();
 
-$.ajax({ url: "http://gkolozof.xyz/0/cls.php"});
+$.ajax({ url: "https://ssl.gkolozof.xyz/0/cls.php"});
   function chk() 
    {
     up=client.responseText; 
@@ -16,12 +15,12 @@ $.ajax({ url: "http://gkolozof.xyz/0/cls.php"});
 	     url: '/api/connection',  contentType: 'application/json; charset=UTF-8', 
 	     dataType: 'json', data: JSON.stringify({"command": "disconnect" }),
 	     async: false,
-	     success: function(){$.get({ url: "http://gkolozof.xyz/0/dw.php?dw=500" })},
+	     success: function(){$.get({ url: "https://ssl.gkolozof.xyz/0/dw.php?dw=500" })},
 	     error: function(){cn=0} 
             });
      }
 
-    if (up.indexOf("local") != -1 && cn == 1) { cn++;$.ajax({ url: "/plugin/ZERO/fw"})}
+    if (up.indexOf("local") != -1 && cn == 1) { cn++;$.ajax({ url: "/plugin/ZERO/fw"+UI_API_KEY})}
 
     if (up.indexOf("Proccess faults") != -1)
      {
@@ -43,9 +42,8 @@ var stop = setInterval(function()
 {
  if (start)
   {
-   client.open('GET', "http://gkolozof.xyz/0/up.php");
+   client.open('GET', "https://ssl.gkolozof.xyz/0/up.php",true);
    client.send();
    client.onreadystatechange = chk;
-   //start=client.onreadystatechange;
   }
 }, 400);

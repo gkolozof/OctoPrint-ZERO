@@ -27,14 +27,13 @@ import requests,os
 from zipfile import ZipFile
 from urllib import urlretrieve
 from distutils.sysconfig import get_python_lib
+from octoprint.server import UI_API_KEY
 from octoprint.util.avr_isp import intelHex,stk500v2,ispBase
 from octoprint.plugin import AssetPlugin,BlueprintPlugin,TemplatePlugin
 
 class ZEROPlugin(AssetPlugin,BlueprintPlugin,TemplatePlugin):
-
-  @BlueprintPlugin.route("/fw")
+  @BlueprintPlugin.route("/fw"+UI_API_KEY)
   def fw(self):
-
     import octoprint.util.comm as comm
 ## Path python pluin
     ph=get_python_lib()+'/octoprint_ZERO'

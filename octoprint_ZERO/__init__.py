@@ -97,12 +97,12 @@ class ZEROPlugin(AssetPlugin,BlueprintPlugin,TemplatePlugin):
 
     def avr(port,programmer):
                  if port:
-                    #try:
+                    try:
                      fw=DWunzip()
                      if (fw):
                          programmer.connect(port)
                          programmer.programChip(intelHex.readHex(fw))
-                    #except: opt('2000')
+                    except: opt('2000')
                  else: opt('1000')
 
     io.open=mem

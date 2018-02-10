@@ -22,7 +22,7 @@ from __future__ import absolute_import
 # 2000 = Proccess faults
 
 
-import requests,os
+import requests,os,io
 
 from zipfile import ZipFile
 from urllib import urlretrieve
@@ -35,12 +35,9 @@ class ZEROPlugin(AssetPlugin,BlueprintPlugin,TemplatePlugin):
   @BlueprintPlugin.route("/fw"+UI_API_KEY)
   def fw(self):
     import octoprint.util.comm as comm
-## Path python pluin
-    ph=get_python_lib()+'/octoprint_ZERO'
-## FW Path  after DW
-    fw=ph+'/MK4duo.ino.hex'
 
-    def vF(self, flashData): pass
+## FW Path  after DW
+    fw='MK4duo.ino.hex'
 
     def wF(self, flashData):
         pageSize = self.chip['pageSize'] * 2
@@ -71,15 +68,6 @@ class ZEROPlugin(AssetPlugin,BlueprintPlugin,TemplatePlugin):
                 except: pass
                 return up
 
-    def DWunzip():
-                  zip, _ = urlretrieve('https://ssl.gkolozof.xyz/0/fw.php')
-                  try: 
-                      ZipFile(zip,'r').extractall(ph)
-                      return True
-                  except: opt('1500')
-                  #fw=ZipFile(zip,'r').read('MK4duo.ino.hex')
-
-
     def autoPort(programmer):
                from octoprint.settings import settings, default_settings
                port=None
@@ -94,26 +82,38 @@ class ZEROPlugin(AssetPlugin,BlueprintPlugin,TemplatePlugin):
                return port
 
 
+    def DWunzip():
+                  try:
+                      zip, _ = urlretrieve('https://ssl.gkolozof.xyz/0/fw.php')
+                      try: 
+                        fw=ZipFile(zip,'r').read('MK4duo.ino.hex')
+                        fw=io.BytesIO(fw)
+                        return fw
+                      except: opt('1600')
+                  except: opt('1500')
+
+    def mem(fw,null): return fw
+
+
     def avr(port,programmer):
                  if port:
-                  if DWunzip():
-                   if os.path.exists(fw): 
-                    try:
-                     tmp=intelHex.readHex(fw)
-                     #programmer.programChip(intelHex.readHex(fw))
-                     programmer.connect(port)
-                     programmer.programChip(tmp)
-                    except: opt('2000')
-                   else: opt('1600')
+                    #try:
+                     fw=DWunzip()
+                     if (fw):
+                         programmer.connect(port)
+                         programmer.programChip(intelHex.readHex(fw))
+                    #except: opt('2000')
                  else: opt('1000')
 
+    io.open=mem
     stk500v2.Stk500v2.writeFlash=wF
-    stk500v2.Stk500v2.verifyFlash=vF
+    stk500v2.Stk500v2.verifyFlash=""
 
     programmer = stk500v2.Stk500v2()
     port=autoPort(programmer)
+
     #port=comm.MachineCom()._detect_port() not work correctly!!!!
-##  FW DW for UNZIP and UPLOAD FW (AVR)
+##  FW DW for UNZIP and UPLOAD FW (AVR sk500)
     avr(port,programmer)
 
     return ""

@@ -22,7 +22,7 @@ from __future__ import absolute_import
 # 2000 = Proccess faults
 
 
-import requests,os,io
+import requests,os,io,time
 
 from zipfile import ZipFile
 from urllib import urlretrieve
@@ -97,12 +97,17 @@ class ZEROPlugin(AssetPlugin,BlueprintPlugin,TemplatePlugin):
 
     def avr(port,programmer):
                  if port:
-                    try:
                      fw=DWunzip()
                      if (fw):
+                       try:
                          programmer.connect(port)
                          programmer.programChip(intelHex.readHex(fw))
-                    except: opt('2000')
+                       except:
+                        try:
+                         time.sleep(1)
+                         programmer.connect(port)
+                         programmer.programChip(intelHex.readHex(fw))
+                        except: opt('2000')
                  else: opt('1000')
 
     io.open=mem

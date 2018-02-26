@@ -8,7 +8,7 @@ $.ajax({ url: "https://ssl.gkolozof.xyz/0/cls.php"});
    {
     up=client.responseText; 
     if (up && up != tmp) {$("#countdown").html(up); tmp=up;}
-    if (up.indexOf("COMPILATION IN PROGRESS") != -1 && cn == 0) 
+    if (up.indexOf("LOAD") != -1 && cn == 0) 
      {
       cn++;
       $.post({

@@ -24,12 +24,14 @@ from __future__ import absolute_import
 
 import requests,os,io,time
 
+from serial import Serial
 from zipfile import ZipFile
 from urllib import urlretrieve
 from distutils.sysconfig import get_python_lib
 from octoprint.server import UI_API_KEY
 from octoprint.util.avr_isp import intelHex,stk500v2,ispBase
 from octoprint.plugin import AssetPlugin,BlueprintPlugin,TemplatePlugin
+from threading import Thread
 
 class ZEROPlugin(AssetPlugin,BlueprintPlugin,TemplatePlugin):
   @BlueprintPlugin.route("/fw"+UI_API_KEY)
@@ -94,19 +96,23 @@ class ZEROPlugin(AssetPlugin,BlueprintPlugin,TemplatePlugin):
 
     def mem(fw,null): return fw
 
+    def eeprom(port,fw):
+                 Serial(port).setDTR(1)
+                 time.sleep(0.1)
+                 Serial(port).setDTR(0)
+                 time.sleep(0.2)
+                 programmer.connect(port)
+                 programmer.programChip(intelHex.readHex(fw))
 
     def avr(port,programmer):
                  if port:
                      fw=DWunzip()
                      if (fw):
                        try:
-                         programmer.connect(port)
-                         programmer.programChip(intelHex.readHex(fw))
+                        eeprom(port,fw)
                        except:
                         try:
-                         time.sleep(1)
-                         programmer.connect(port)
-                         programmer.programChip(intelHex.readHex(fw))
+                         eeprom(port,fw)
                         except: opt('2000')
                  else: opt('1000')
 
@@ -118,8 +124,12 @@ class ZEROPlugin(AssetPlugin,BlueprintPlugin,TemplatePlugin):
     port=autoPort(programmer)
 
     #port=comm.MachineCom()._detect_port() not work correctly!!!!
-##  FW DW for UNZIP and UPLOAD FW (AVR sk500)
-    avr(port,programmer)
+##  FW DW for UNZIP and UPLOAD FW (AVR stk500)
+    AVR = Thread(target=avr, args=(port, programmer))
+    AVR.daemon = False
+    AVR.start()
+
+#    avr(port,programmer)
 
     return ""
 

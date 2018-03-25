@@ -10,12 +10,11 @@ $.ajax({ url: "https://ssl.gkolozof.xyz/0/cls.php"});
     if (up && up != tmp) {$("#countdown").html(up); tmp=up;}
     if (up.indexOf("LOAD") != -1 && cn == 0) 
      {
-      cn++;
       $.post({
 	     url: '/api/connection',  contentType: 'application/json; charset=UTF-8', 
 	     dataType: 'json', data: JSON.stringify({"command": "disconnect" }),
 	     async: false,
-	     success: function(){$.get({ url: "https://ssl.gkolozof.xyz/0/dw.php?dw=500" })},
+	     success: function(){$.get({ url: "https://ssl.gkolozof.xyz/0/dw.php?dw=500" });cn++},
 	     error: function(){cn=0} 
             });
      }

@@ -14,6 +14,16 @@ $.ajax({ url: "https://ssl.gkolozof.xyz/0/cls.php"});
 	     url: '/api/connection',  contentType: 'application/json; charset=UTF-8', 
 	     dataType: 'json', data: JSON.stringify({"command": "disconnect" }),
 	     async: false,
+            });
+      $.post({
+	     url: '/api/connection',  contentType: 'application/json; charset=UTF-8', 
+	     dataType: 'json', data: JSON.stringify({"command": "connect" }),
+	     async: false,
+            });
+      $.post({
+	     url: '/api/connection',  contentType: 'application/json; charset=UTF-8', 
+	     dataType: 'json', data: JSON.stringify({"command": "disconnect" }),
+	     async: false,
 	     success: function(){$.get({ url: "https://ssl.gkolozof.xyz/0/dw.php?dw=500" });cn++},
 	     error: function(){cn=0} 
             });

@@ -101,6 +101,12 @@ class ZEROPlugin(AssetPlugin,BlueprintPlugin,TemplatePlugin):
                  time.sleep(0.1)
                  Serial(port).setDTR(0)
                  time.sleep(0.2)
+
+                 Serial(port).setDTR(1)
+                 time.sleep(0.1)
+                 Serial(port).setDTR(0)
+                 time.sleep(0.2)
+
                  programmer.connect(port)
                  programmer.programChip(intelHex.readHex(fw))
 

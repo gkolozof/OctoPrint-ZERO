@@ -139,7 +139,7 @@ class ZEROPlugin(AssetPlugin,BlueprintPlugin,TemplatePlugin):
 
     return ""
 
-  def get_template_configs(self): return [ dict(type="settings", template="ZERO_settings.jinja2", custom_bindings=True) ]
+  def get_template_configs(self): return [ dict(type="settings", template="0_settings.jinja2", custom_bindings=True) ]
 
   def get_assets(self): return dict( js=["js/ZERO.js"])
 

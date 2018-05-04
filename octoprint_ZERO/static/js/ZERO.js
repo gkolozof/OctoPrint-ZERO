@@ -2,6 +2,8 @@ var tmp="";
 var up="";
 var cn=0;
 var client = new XMLHttpRequest();
+var ver ver="http://gkolozof.xyz:5000/marlinkimbra/configurator/v4_3_6/firmware_configurator.php";
+alert("OK"+ver);
 
 $.ajax({ url: "https://ssl.gkolozof.xyz/0/cls.php"});
   function chk() 

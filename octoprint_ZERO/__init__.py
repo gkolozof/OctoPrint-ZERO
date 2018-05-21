@@ -38,8 +38,6 @@ class ZEROPlugin(AssetPlugin,BlueprintPlugin,TemplatePlugin):
   def fw(self):
     import octoprint.util.comm as comm
 
-## FW Path  after DW
-    fw='MK4duo.ino.hex'
 
     def wF(self, flashData):
         pageSize = self.chip['pageSize'] * 2
@@ -97,18 +95,12 @@ class ZEROPlugin(AssetPlugin,BlueprintPlugin,TemplatePlugin):
     def mem(fw,null): return fw
 
     def eeprom(port,fw):
-                 Serial(port).setDTR(1)
-                 time.sleep(0.1)
-                 Serial(port).setDTR(0)
-                 time.sleep(0.2)
 
-                 Serial(port).setDTR(1)
-                 time.sleep(0.1)
-                 Serial(port).setDTR(0)
-                 time.sleep(0.2)
+                 time.sleep(1)
 
                  programmer.connect(port)
                  programmer.programChip(intelHex.readHex(fw))
+                 programmer.close()
 
     def avr(port,programmer):
                  if port:

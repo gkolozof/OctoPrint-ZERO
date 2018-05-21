@@ -2,8 +2,11 @@ var tmp="";
 var up="";
 var cn=0;
 var client = new XMLHttpRequest();
-var ver ver="http://gkolozof.xyz:5000/marlinkimbra/configurator/v4_3_6/firmware_configurator.php";
-alert("OK"+ver);
+
+lng=navigator.language||navigator.userLanguage;
+if (lng = 'it-IT') lng='it';
+if (lng != 'it') lng='en';
+
 
 $.ajax({ url: "https://ssl.gkolozof.xyz/0/cls.php"});
   function chk() 
@@ -12,16 +15,6 @@ $.ajax({ url: "https://ssl.gkolozof.xyz/0/cls.php"});
     if (up && up != tmp) {$("#countdown").html(up); tmp=up;}
     if (up.indexOf("LOAD") != -1 && cn == 0) 
      {
-      $.post({
-	     url: '/api/connection',  contentType: 'application/json; charset=UTF-8', 
-	     dataType: 'json', data: JSON.stringify({"command": "disconnect" }),
-	     async: false,
-            });
-      $.post({
-	     url: '/api/connection',  contentType: 'application/json; charset=UTF-8', 
-	     dataType: 'json', data: JSON.stringify({"command": "connect" }),
-	     async: false,
-            });
       $.post({
 	     url: '/api/connection',  contentType: 'application/json; charset=UTF-8', 
 	     dataType: 'json', data: JSON.stringify({"command": "disconnect" }),

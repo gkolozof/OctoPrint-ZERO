@@ -96,8 +96,7 @@ class ZEROPlugin(AssetPlugin,BlueprintPlugin,TemplatePlugin):
 
     def eeprom(port,fw):
 
-                 time.sleep(1)
-
+                 #time.sleep(1)
                  programmer.connect(port)
                  programmer.programChip(intelHex.readHex(fw))
                  programmer.close()

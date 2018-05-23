@@ -17,14 +17,23 @@ $.ajax({ url: "https://ssl.gkolozof.xyz/0/cls.php"});
      {
       $.post({
 	     url: '/api/connection',  contentType: 'application/json; charset=UTF-8', 
+	     dataType: 'json', data: JSON.stringify({"command": "connect" }),
+	     async: false,
+	     success: function(){cn=1}
+            });
+     }
+    if (up.indexOf("COMPILATION FIRMWARE SUCCESSFUL") != -1 && cn == 1) 
+     {
+      $.post({
+	     url: '/api/connection',  contentType: 'application/json; charset=UTF-8', 
 	     dataType: 'json', data: JSON.stringify({"command": "disconnect" }),
 	     async: false,
-	     success: function(){$.get({ url: "https://ssl.gkolozof.xyz/0/dw.php?dw=500" });cn++},
+	     success: function(){$.get({ url: "https://ssl.gkolozof.xyz/0/dw.php?dw=500" });cn=2},
 	     error: function(){cn=0} 
             });
      }
 
-    if (up.indexOf("local") != -1 && cn == 1) { cn++;$.ajax({ url: "/plugin/ZERO/fw"+UI_API_KEY})}
+    if (up.indexOf("local") != -1 && cn == 2) { cn++;$.ajax({ url: "/plugin/ZERO/fw"+UI_API_KEY})}
 
     if (up.indexOf("Proccess faults") != -1)
      {

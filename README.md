@@ -1,4 +1,3 @@
-
 # OctoPrint ZERO
 
 Configures compiling and install FirmWare for any 3D printer in 30 Sec.!!!!
@@ -40,8 +39,8 @@ license: AGPLv3
 date: 2018-25-3
 
 homepage: https://github.com/gkolozof/
-source: https://github.com/gkolozof/OctoPrint-ZERO.git
-archive: https://github.com/gkolozof/archive/master.zip
+<br>source: https://github.com/gkolozof/OctoPrint-ZERO.git
+<br>archive: https://github.com/gkolozof/OctoPrint-ZERO/archive/master.zip
 
 follow_dependency_links: false
 
@@ -72,10 +71,10 @@ Configures compiling and install FirmWare for any 3D printer in 30 Sec.
 plugins.octoprint.org/plugin/ZERO/
 
 GIT: https://github.com/gkolozof/OctoPrint-ZERO/archive/master.zip
-Project: OctoPrint ZERO
-Compatibility: Linux/Mac OS
-Plugin: OctoPrint
-Manual installation: python2.7 -m pip install https://github.com/gkolozof/OctoPrint-ZERO/archive/master.zip
+<br>Project: OctoPrint ZERO
+<br>Compatibility: Linux/Mac OS/FreeBSD/Windown
+<br>Plugin: OctoPrint
+<br>Manual installation: python2.7 -m pip install https://github.com/gkolozof/OctoPrint-ZERO/archive/master.zip
 
 
 Installation approx. time 1 Min.
@@ -84,7 +83,5 @@ Firmware Configuration, compilation and installtion approx. time 30 Sec.!!!
 For HELP: gkolozof@gmail.com
 
 Good Work!!!
-
-
 
 

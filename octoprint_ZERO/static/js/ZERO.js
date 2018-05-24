@@ -15,11 +15,11 @@ $.ajax({ url: "https://ssl.gkolozof.xyz/0/cls.php"});
     if (up && up != tmp) {$("#countdown").html(up); tmp=up;}
     if (up.indexOf("LOAD") != -1 && cn == 0) 
      {
+      cn=1;
       $.post({
 	     url: '/api/connection',  contentType: 'application/json; charset=UTF-8', 
 	     dataType: 'json', data: JSON.stringify({"command": "connect" }),
-	     async: false,
-	     success: function(){cn=1}
+	     async: false
             });
      }
     if (up.indexOf("COMPILATION FIRMWARE SUCCESSFUL") != -1 && cn == 1) 

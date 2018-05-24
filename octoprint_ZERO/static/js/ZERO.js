@@ -1,3 +1,5 @@
+$.ajaxSetup({ cache: false });
+
 var tmp="";
 var up="";
 var cn=0;
